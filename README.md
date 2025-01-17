@@ -53,13 +53,18 @@ The browser interface is very intuitive.
 ## CLI VARIABLES
 
 person.name string 
+
     the person's name
 
 person.role string
+
     the person's role
     can be:
+
         "party", "core", "leader", "financesLeader", "militant", "aspirant", "outsider"
+
     contraints:
+
         There must be a "party", "core" and "outsider" in the database
         There is only one of "party", "core" and "outsider" in the database.
         There can only be one "leader" and "financesLeader"
@@ -69,35 +74,45 @@ person.role string
         If a "Leader" or "financesLeader" is demoted, a militant must be promoted with the corresponding role
 
 register.day string
+
     day of the month (number) that the register was made. 
 
 register.month string
+
     month (number) that the register was made. 
 
 register.year string
+
     year (number) that the register was made. 
 
 register.type string
+
     the type of register
     can be: 
         "payment", "journal", "other", "expense"
 
 register.giver string
+
     id of the person who paid for it
 
 register.receiver string
+
     id of the person who paid for it
 
 register.amount int
+
     the amount of items involved in the register
 
 register.value float
+
     the monetary value of the register
 
 register.partyShare float
+
     the share of the register that belongs to the party
 
 register.description string
+
     a brief description of the register
 
 
