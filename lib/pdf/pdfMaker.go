@@ -137,6 +137,23 @@ func MakePDFReport(r models.MonthReport) error {
 	valores_finais.Add(superavit_core_row)
 
 	err = c.WriteToFile("report.pdf")
+
+	// Créditos de Membros 
+
+	creditos_membros := makeSubchapter(titulo, "Créditos de Membros", normalFont)
+	titulo.Add(creditos_membros)
+
+	creditos_membros_table := makeTable(c, []string{"Nome", "Valor"}, normalFont)
+	
+	for _, cr := range r.MembersAfterPaying {
+		if cr.Role == "leader" ||cr.Role == "financeLeader" || cr.Role == "militant" || cr.Role == "aspirant" {
+			drawCell(c, creditos_membros_table, cr.Name, normalFont, creator.CellHorizontalAlignmentCenter)
+			drawCell(c, creditos_membros_table, fmt.Sprintf("%f", cr.Credit), normalFont, creator.CellHorizontalAlignmentCenter)
+		}
+	}
+
+	creditos_membros.Add(creditos_membros_table)
+	
 	return err
 }
 
