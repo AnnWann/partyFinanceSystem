@@ -12,8 +12,7 @@ import (
 const file = "/home/uanadev/databases/pstu.db"
 
 func main() {
-	database.InitDB(file)
-
+	database.GetDB().InitDB(file)
 	var command string
 
 	for {
@@ -24,6 +23,7 @@ func main() {
 
 		switch splitCommand[0] {
 			case "exit":
+				database.GetDB().Close()
 				return 
 		
 			case "get":

@@ -37,8 +37,10 @@ func AddPerson(name string, role string) error {
 		return err
 	}
 
+	db := database.GetDB().GetPersonDB()
+
 	if role == "aspirant" {
-		count, err := database.CountNonAspirantMembers()
+		count, err := db.CountNonAspirantMembers()
 		if err != nil {
 			return err
 		}
@@ -48,7 +50,7 @@ func AddPerson(name string, role string) error {
 		}
 	}
 
-	membersCount, err := database.CountMembers()
+	membersCount, err := db.CountMembers()
 	if err != nil {
 		return err
 	}
@@ -59,17 +61,17 @@ func AddPerson(name string, role string) error {
 		person.Role = "financeLeader"
 	}
 
-	err = database.InsertPerson(person)
+	err = db.InsertPerson(person)
 	return err
 }
 
 func GetAllPersons() ([]models.Person, error) {
-	persons, err := database.GetAllPersons()
+	persons, err := database.GetDB().GetPersonDB().GetAllPersons()
 	return persons, err
 }
 
 func GetMembers() ([]models.Person, error) {
-	members, err := database.GetMembers()
+	members, err := database.GetDB().GetPersonDB().GetMembers()
 	return members, err
 }
 
@@ -79,7 +81,7 @@ func GetPerson(id string) (models.Person, error) {
 		return models.Person{}, err
 	}
 
-	person, err := database.GetPerson(id)
+	person, err := database.GetDB().GetPersonDB().GetPerson(id)
 	return person, err
 }
 
@@ -88,7 +90,9 @@ func PromoteToMilitant(id string) error {
 		return errors.New("arguments cannot be empty. the correct format is 'promote <id>'")
 	}
 
-	p, err := database.GetPerson(id)
+	db := database.GetDB().GetPersonDB()
+
+	p, err := db.GetPerson(id)
 	if err != nil {
 		return err
 	}
@@ -98,7 +102,7 @@ func PromoteToMilitant(id string) error {
 		return err
 	}
 
-	err = database.PromoteToMilitant(id)
+	err = db.PromoteToMilitant(id)
 	return err
 }
 
@@ -108,7 +112,9 @@ func PromoteNewLeader(promotee string, demotee string) error {
 		return err
 	}
 
-	demoteeP, err := database.GetPerson(demotee)
+	db := database.GetDB().GetPersonDB()
+
+	demoteeP, err := db.GetPerson(demotee)
 	if err != nil {
 		return err
 	}
@@ -118,7 +124,7 @@ func PromoteNewLeader(promotee string, demotee string) error {
 		return err
 	}
 
-	err = database.PromoteNewLeader(promotee, demoteeP)
+	err = db.PromoteNewLeader(promotee, demoteeP)
 	return err
 }
 
@@ -126,6 +132,6 @@ func DeletePerson(id string) error {
 	if id == "" {
 		return errors.New("arguments cannot be empty. the correct format is 'delete <id>'")
 	}
-	err := database.DeletePerson(id)
+	err := database.GetDB().GetPersonDB().DeletePerson(id)
 	return err
 }

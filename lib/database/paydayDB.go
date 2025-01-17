@@ -1,12 +1,22 @@
 package database
 
-func GetPayday() (string, error) {
+import "database/sql"
+
+type PaydayDB struct {
+	*sql.DB
+}
+
+func (db *DBWrapper) GetPaydayDB() PaydayDB {
+	return PaydayDB{db.DB}
+}
+
+func (db PaydayDB) GetPayday() (string, error) {
 	PAYDAY := ""
-	err := DB.QueryRow("SELECT * FROM payday").Scan(&PAYDAY)
+	err := db.QueryRow("SELECT * FROM payday").Scan(&PAYDAY)
 	return PAYDAY, err
 }
 
-func SetPayday(PAYDAY string) error {
-	_, err := DB.Exec("UPDATE payday SET payday = ?", PAYDAY)
+func (db PaydayDB) SetPayday(PAYDAY string) error {
+	_, err := db.Exec("UPDATE payday SET payday = ?", PAYDAY)
 	return err
 }

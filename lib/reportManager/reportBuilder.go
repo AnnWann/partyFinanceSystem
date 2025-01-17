@@ -7,22 +7,25 @@ import (
 
 func GetMonthlyReport(month string, year string) (models.MonthReport, error) {
 
-	registersOfTheMonth, err := database.GetRegisterByMonthAndYear(month, year)
+	db := database.GetDB()
+
+	registersOfTheMonth, err := db.GetRegisterDB().GetRegisterByMonthAndYear(month, year)
 	if err != nil {
 		return models.MonthReport{}, err
 	}
 
-	members, err := database.GetMembers()
+	personDB := db.GetPersonDB()
+	members, err := personDB.GetMembers()
 	if err != nil {
 		return models.MonthReport{}, err
 	}
 
-	core, err := database.GetCore()
+	core, err := personDB.GetCore()
 	if err != nil {
 		return models.MonthReport{}, err
 	}
 
-	party, err := database.GetParty()
+	party, err := personDB.GetParty()
 	if err != nil {
 		return models.MonthReport{}, err
 	}
@@ -82,7 +85,7 @@ func GetMonthlyReport(month string, year string) (models.MonthReport, error) {
 			(journalPartyShare + othersPartyShare + totalPayments),
 	}
 
-	payday, err := database.GetPayday()
+	payday, err := db.GetPaydayDB().GetPayday()
 	if err != nil {
 		return models.MonthReport{}, err
 	}
@@ -98,12 +101,12 @@ func GetMonthlyReport(month string, year string) (models.MonthReport, error) {
 		Amount:      1,
 	}
 
-	err = database.InsertRegister(partyDebts)
+	err = db.GetRegisterDB().InsertRegister(partyDebts)
 	if err != nil {
 		return models.MonthReport{}, err
 	}
 
-	err = database.InsertReport(report)
+	err = db.GetReportDB().InsertReport(report)
 
 	return report, err
 }

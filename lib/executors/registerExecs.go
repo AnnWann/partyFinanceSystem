@@ -69,7 +69,7 @@ func AddRegister(day string, month string, year string, Type string, giver strin
 		Description: description,
 	}
 
-	err = database.InsertRegister(register)
+	err = database.GetDB().GetRegisterDB().InsertRegister(register)
 	return err
 }
 
@@ -77,11 +77,11 @@ func GetRegister(id string) (models.Register, error) {
 	if id == "" {
 		return models.Register{}, errors.New("arguments cannot be empty. The correct format is 'get register <id>'")
 	}
-	return database.GetRegister(id)
+	return database.GetDB().GetRegisterDB().GetRegister(id)
 }
 
 func GetRegisters () ([]models.Register, error) {
-	return database.GetRegisters()
+	return database.GetDB().GetRegisterDB().GetRegisters()
 }
 
 func GetRegisterByMonthAndYear (month string, year string) ([]models.Register, error) {
@@ -96,7 +96,7 @@ func GetRegisterByMonthAndYear (month string, year string) ([]models.Register, e
 	if err != nil {
 			return []models.Register{}, errors.New("invalid year")
 	}
-	return database.GetRegisterByMonthAndYear(month, year)
+	return database.GetDB().GetRegisterDB().GetRegisterByMonthAndYear(month, year)
 }
 
 func GetRegistersByYear (year string) ([]models.Register, error) {
@@ -107,5 +107,5 @@ func GetRegistersByYear (year string) ([]models.Register, error) {
 	if year == "" {
 		return []models.Register{}, errors.New("arguments cannot be empty. The correct format is 'get register <year>'")
 	}
-	return database.GetRegistersByYear(year)
+	return database.GetDB().GetRegisterDB().GetRegistersByYear(year)
 }

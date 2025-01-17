@@ -6,22 +6,29 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-var DB *sql.DB
+type DBWrapper struct {
+	*sql.DB
+}
 
-func InitDB(file string) {
+func GetDB () *DBWrapper {
+	var DB *sql.DB
+	return &DBWrapper{DB}
+}
+
+func (db *DBWrapper) InitDB(file string) {
 	var err error
-	DB, err = sql.Open("sqlite3", file)
+	db.DB, err = sql.Open("sqlite3", file)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	DB.Exec("CREATE TABLE IF NOT EXISTS persons (id INTEGER NOT NULL PRIMARY KEY," +
+	db.Exec("CREATE TABLE IF NOT EXISTS persons (id INTEGER NOT NULL PRIMARY KEY," +
 		"name TEXT NOT NULL, " +
 		"role TEXT NOT NULL, " +
 		"monthly_contribution REAL NOT NULL, " +
-		"credit float NOT NULL)");
+		"credit float NOT NULL)")
 
-	DB.Exec("CREATE TABLE IF NOT EXISTS registers (id INTEGER NOT NULL PRIMARY KEY," +
+	db.Exec("CREATE TABLE IF NOT EXISTS registers (id INTEGER NOT NULL PRIMARY KEY," +
 		"day TEXT NOT NULL, " +
 		"month TEXT NOT NULL, " +
 		"year TEXT NOT NULL, " +
@@ -33,9 +40,9 @@ func InitDB(file string) {
 		"party_share float NOT NULL, " +
 		"description TEXT NOT NULL)" + 
 		"FOREIGN KEY (giver) REFERENCES persons(id)" +
-		"FOREIGN KEY (receiver) REFERENCES persons(id)");
+		"FOREIGN KEY (receiver) REFERENCES persons(id)")
 	
-	DB.Exec("CREATE TABLE IF NOT EXISTS reports (id INTEGER NOT NULL PRIMARY KEY," +
+	db.Exec("CREATE TABLE IF NOT EXISTS reports (id INTEGER NOT NULL PRIMARY KEY," +
 		"month TEXT NOT NULL, " +
 		"year TEXT NOT NULL, " +
 		"members TEXT NOT NULL, " +
@@ -49,6 +56,11 @@ func InitDB(file string) {
 		"foreign key (members) references persons(id)" + 
 		"foreign key (membersPayments) references registers(id)" +
 		"foreign key (expenses) references registers(id)" +
-		"foreign key (sales) references registers(id)");
+		"foreign key (sales) references registers(id)")
 
+	db.Exec("CREATE TABLE IF NOT EXISTS payday (payday TEXT NOT NULL)")
+	db.Exec("INSERT OR IGNORE INTO payday (payday) VALUES (10)")
+	db.Exec("INSERT OR IGNORE INSERT INTO persons (id, name, role, monthly_contribution, credit) VALUES ('core', 'core', 'core', 0, 0)")
+	db.Exec("INSERT OR IGNORE INSERT INTO persons (id, name, role, monthly_contribution, credit) VALUES ('party', 'party', 'party', 0, 0)")
+	db.Exec("INSERT OR IGNORE INSERT INTO persons (id, name, role, monthly_contribution, credit) VALUES ('outsider', 'outsider', 'outsider', 0, 0)")
 }

@@ -1,17 +1,31 @@
 package database
 
-import "github.com/AnnWann/pstu_finance_system/lib/models"
+import (
+	"database/sql"
 
-func InsertReport(r models.MonthReport) error {
+	"github.com/AnnWann/pstu_finance_system/lib/models"
+)
 
+type ReportDB struct {
+	*sql.DB
+}
+
+func (db *DBWrapper) GetReportDB() *ReportDB {
+	return &ReportDB{db.DB}
+}
+
+func (rDb ReportDB) InsertReport(r models.MonthReport) error {
+
+	DB := GetDB()
+	PersonDB := DB.GetPersonDB()
 	for _, m := range r.MembersAfterPaying {
-		err := UpdateCredit(m.Id, m.Credit)
+		err := PersonDB.UpdateCredit(m.Id, m.Credit)
 		if err != nil {
 			return err
 		}
 	}
 
-	err := UpdateCredit(r.Core.Id, r.Core.Credit)
+	err := PersonDB.UpdateCredit(r.Core.Id, r.Core.Credit)
 	if err != nil {
 		return err
 	}
@@ -37,7 +51,7 @@ func InsertReport(r models.MonthReport) error {
 		salesIds[i] = sale.Id
 	}
 
-	_, err = DB.Exec(
+	_, err = rDb.Exec(
 		"INSERT INTO"+
 			"reports (id, month, year, members, membersPayments, expenses, sales, totalEarned, totalLiquid, partyDebts, CoreSurplus)"+
 			"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -51,9 +65,9 @@ func InsertReport(r models.MonthReport) error {
 	return nil
 }
 
-func GetReport(id string) (models.CompactMonthReport, error) {
+func (db ReportDB)GetReport(id string) (models.CompactMonthReport, error) {
 	var r models.CompactMonthReport
-	err := DB.QueryRow("SELECT * FROM reports WHERE id = ?", id).
+	err := db.QueryRow("SELECT * FROM reports WHERE id = ?", id).
 		Scan(&r.Id, &r.Month, &r.Year, &r.Members, &r.MembersPayments,
 			&r.Expenses, &r.Sales, &r.TotalEarned,
 			&r.TotalLiquid, &r.PartyDebts, &r.CoreSurplus)

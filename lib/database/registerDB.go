@@ -1,26 +1,36 @@
 package database
 
 import (
+	"database/sql"
+
 	"github.com/AnnWann/pstu_finance_system/lib/models"
 )
 
-func InsertRegister(r models.Register) error {
-	_, err := DB.Exec("INSERT INTO registers (id, day, month, year, type, giver, receiver, ammount, value, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+type RegisterDB struct {
+	*sql.DB
+}
+
+func (db *DBWrapper) GetRegisterDB() *RegisterDB {
+	return &RegisterDB{db.DB}
+}
+
+func (db RegisterDB) InsertRegister(r models.Register) error {
+	_, err := db.Exec("INSERT INTO registers (id, day, month, year, type, giver, receiver, ammount, value, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		r.Id, r.Day, r.Month, r.Year, r.Type, r.Giver, r.Receiver, r.Amount, r.Value, r.Description)
 
 	return err
 }
 
-func GetRegister(id string) (models.Register, error) {
+func (db RegisterDB) GetRegister(id string) (models.Register, error) {
 	var r models.Register
-	err := DB.QueryRow("SELECT * FROM registers WHERE id = ?", id).Scan(
+	err := db.QueryRow("SELECT * FROM registers WHERE id = ?", id).Scan(
 		&r.Id, &r.Day, &r.Month, &r.Year, &r.Type, &r.Giver, &r.Receiver, &r.Amount, &r.Value, &r.Description)
 
 	return r, err
 }
 
-func GetRegisters() ([]models.Register, error) {
-	rows, err := DB.Query("SELECT * FROM registers")
+func (db RegisterDB) GetRegisters() ([]models.Register, error) {
+	rows, err := db.Query("SELECT * FROM registers")
 	if err != nil {
 		return nil, err
 	}
@@ -39,8 +49,8 @@ func GetRegisters() ([]models.Register, error) {
 	return registers, nil
 }
 
-func GetRegisterByMonthAndYear(month string, year string) ([]models.Register, error) {
-	rows, err := DB.Query("SELECT * FROM registers WHERE month = ? AND year = ?", month, year)
+func (db RegisterDB) GetRegisterByMonthAndYear(month string, year string) ([]models.Register, error) {
+	rows, err := db.Query("SELECT * FROM registers WHERE month = ? AND year = ?", month, year)
 	if err != nil {
 		return nil, err
 	}
@@ -59,8 +69,8 @@ func GetRegisterByMonthAndYear(month string, year string) ([]models.Register, er
 	return registers, nil
 }
 
-func GetRegistersByYear(year string) ([]models.Register, error) {
-	rows, err := DB.Query("SELECT * FROM registers WHERE year = ?", year)
+func (db RegisterDB) GetRegistersByYear(year string) ([]models.Register, error) {
+	rows, err := db.Query("SELECT * FROM registers WHERE year = ?", year)
 	if err != nil {
 		return nil, err
 	}

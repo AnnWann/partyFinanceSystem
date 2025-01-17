@@ -13,7 +13,8 @@ func GetMonthlyReport(month string, year string) error {
 		return errors.New("invalid arguments. The correct format is 'get report <month> <year>'")
 	}
 
-	reportSummary, err := database.GetReport(month + "-" + year)
+	db := database.GetDB().GetReportDB()
+	reportSummary, err := db.GetReport(month + "-" + year)
 	if err != nil {
 		return err
 	}
@@ -27,7 +28,7 @@ func GetMonthlyReport(month string, year string) error {
 			return err
 		}
 	} else {
-		tx, err := database.DB.Begin()
+		tx, err := db.Begin()
 		if err != nil {
 			tx.Rollback()
 			return err
@@ -49,13 +50,13 @@ func GetMonthlyReport(month string, year string) error {
 }
 
 func GetPayday() (string, error) {
-	payday, err := database.GetPayday()
+	payday, err := database.GetDB().GetPaydayDB().GetPayday()
 	return payday, err
 }
 func SetPayday(payday string) error {
 	if payday == "" {
 		return errors.New("invalid arguments. The correct format is 'set payday <day>'")
 	}
-	err := database.SetPayday(payday)
+	err := database.GetDB().GetPaydayDB().SetPayday(payday)
 	return err
 }
