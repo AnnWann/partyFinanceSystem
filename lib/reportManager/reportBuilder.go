@@ -82,7 +82,32 @@ func GetMonthlyReport(month string, year string) (models.MonthReport, error) {
 			(journalPartyShare + othersPartyShare + totalPayments),
 	}
 
+	payday, err := database.GetPayday()
+	if err != nil {
+		return models.MonthReport{}, err
+	}
+
+	partyDebts := models.Register{
+		Day:         payday,
+		Month:       month,
+		Year:        year,
+		Type:        "partyDebts",
+		Description: "Pagamento do partido",
+		Value:       journalPartyShare + othersPartyShare + totalPayments,
+		PartyShare:  journalPartyShare + othersPartyShare + totalPayments,
+		Amount:      1,
+	}
+
+	err = database.InsertRegister(partyDebts)
+	if err != nil {
+		return models.MonthReport{}, err
+	}
+
 	err = database.InsertReport(report)
 
 	return report, err
 }
+
+/* func GetYearlyReport(year string) (models.YearlyReport, error) {
+	//TODO: Implement this
+} */
