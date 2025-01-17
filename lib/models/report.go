@@ -31,6 +31,11 @@ type CompactMonthReport struct {
 	CoreSurplus     float32
 }
 
+func (r *CompactMonthReport) GetFullReport() (MonthReport, error) {
+	//TODO: Implement this
+	return MonthReport{}, nil
+}
+
 type SubReport struct {
 	Registers  []Register
 	PartyShare float32

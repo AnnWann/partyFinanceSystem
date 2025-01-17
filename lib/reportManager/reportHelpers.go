@@ -17,9 +17,9 @@ func getMemberPayments(registers []models.Register, members []models.Person) ([]
 		}
 
 		m.Credit = m.Credit + monthPayment
-		if m.Credit+monthPayment > m.MonthlyContribution {
-			m.Credit = m.Credit + monthPayment - m.MonthlyContribution
-			totalPayments = totalPayments + m.MonthlyContribution
+		if m.Credit+monthPayment > m.MonthlyPayment {
+			m.Credit = m.Credit + monthPayment - m.MonthlyPayment
+			totalPayments = totalPayments + m.MonthlyPayment
 		} else {
 			totalPayments = totalPayments + m.Credit + monthPayment
 			m.Credit = 0
