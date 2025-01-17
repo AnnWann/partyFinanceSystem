@@ -89,6 +89,7 @@ register.type string
 
     the type of register
     can be: 
+    
         "payment", "journal", "other", "expense"
 
 register.giver string
