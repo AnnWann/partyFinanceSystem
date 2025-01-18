@@ -31,15 +31,15 @@ The commands are:
     $ get person --members - Gets all members
     $ get person <id> - Gets one person
     $ get person --byName - Gets one person by name
-    $ get register <id\ - Gets one register
+    $ get register <id> - Gets one register
     $ get register --all - Gets all registers
-    $ get register --byMonthAndYear <month\ <year\ - Gets all registers by month and year
-    $ get register --byYear <year\ - Gets all registers by year
-    $ get report <month\ \<year\> - Gets one report
-    $ get report <year\ - Gets the report of the year (not implemented)
+    $ get register --byMonthAndYear <month> <year> - Gets all registers by month and year
+    $ get register --byYear <year>- Gets all registers by year
+    $ get report <month> <year> - Gets one report
+    $ get report <year> - Gets the report of the year (not implemented)
     $ get payday - Gets the payday
     $ add person - Adds a person
-    $ add register <day\ <month> <year> <type> <giver> <receiver> <amount> <value> <partyShare> <description> - Adds a register
+    $ add register <day> <month> <year> <type> <giver> <receiver> <amount> <value> <partyShare> <description> - Adds a register
     $ set payday <day> - Sets the payday
     $ promote <id> - Promotes a person to militant
     $ promote <promoteeId> <demoteeId> - swaps roles (demotee must be some kind of leader)
