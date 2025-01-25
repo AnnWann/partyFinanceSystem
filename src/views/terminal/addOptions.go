@@ -46,7 +46,7 @@ func (op *Options) AddPerson(Arguments []string) {
 		return
 	}
 
-	fmt.Println("%s adicionada com sucesso com id: %s", nome, id)
+	fmt.Printf("%s adicionada com sucesso com id: %s\n", nome, id)
 }
 
 func (op *Options) AddRegister(Arguments []string) {
@@ -71,7 +71,7 @@ func (op *Options) AddRegister(Arguments []string) {
 		return
 	}
 
-	fmt.Println("Registro adicionado com sucesso com id: %s", id)
+	fmt.Printf("Registro adicionado com sucesso com id: %d\n", id)
 }
 
 func (op *Options) AddTypeOfRegister(Arguments []string) {
@@ -95,7 +95,7 @@ func (op *Options) AddTypeOfRegister(Arguments []string) {
 }
 
 func (op *Options) AddNucleo(Arguments []string) {
-	if len(Arguments) < 3 {
+	if len(Arguments) < 4 {
 		fmt.Println("Commando invalido, considere: " + op.Commands["add"] + " " + op.AddModifiers["--nucleo"])
 		return
 	}
@@ -103,13 +103,14 @@ func (op *Options) AddNucleo(Arguments []string) {
 	nome := Arguments[0]
 	cidade := Arguments[1]
 	estado := Arguments[2]
-	id, err := executors.AddNucleo(nome, cidade, estado)
+	payday := Arguments[3]
+	id, err := executors.AddNucleo(nome, cidade, estado, payday)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	fmt.Println("Nucleo adicionado com sucesso com id: %s", id)
+	fmt.Printf("Nucleo adicionado com sucesso com id: %d\n", id)
 }
 
 func (op *Options) AddPartido(Arguments []string) {
@@ -154,7 +155,7 @@ func (op *Options) AddReport(Arguments []string) {
 		}
 	}
 
-	fmt.Println("Relatório com id(%s) adicionado com sucesso em %s, abrindo arquivo...", id, path_to_pdf)
+	fmt.Printf("Relatório com id(%s) adicionado com sucesso em %s, abrindo arquivo..\n.", id, path_to_pdf)
 
 	cmd := exec.Command("xdg-open", path_to_pdf)
 	err = cmd.Start()
@@ -173,7 +174,7 @@ func AddMonthReport(nucleo, month, year string) (string, string, error) {
 }
 
 func AddYearReport(nucleo, year string) (string, string, error) {
-	return "", "", errors.New("Not implemented")
+	return "", "", errors.New("not implemented")
 	/* path_to_pdf, err := executors.AddYearlyReport(nucleo, year)
 	if err != nil {
 		return "", err

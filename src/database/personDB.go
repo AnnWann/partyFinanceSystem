@@ -119,12 +119,17 @@ func (db *PersonDB) Promote(id string, role string) error {
 	return err
 }
 
-func (db *PersonDB) UpdateMonthlyContribution(id string, monthlyContribution int) error {
+func (db *PersonDB) UpdateMonthlyContribution(id string, monthlyContribution float64) error {
 	_, err := db.Exec("UPDATE persons SET monthlyContribution = ? WHERE id = ?", monthlyContribution, id)
 	return err
 }
 
 func (db *PersonDB) UpdateCredit(id string, credit float64) error {
 	_, err := db.Exec("UPDATE persons SET credit = ? WHERE id = ?", credit, id)
+	return err
+}
+
+func (db *PersonDB) UpdateNucleo(id string, nucleo int) error {
+	_, err := db.Exec("UPDATE persons SET nucleo = ? WHERE id = ?", nucleo, id)
 	return err
 }

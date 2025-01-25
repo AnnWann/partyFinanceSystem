@@ -190,6 +190,18 @@ func GetTypeOfRegister(nucleo string) ([]models.TypeOfRegister, error) {
 	return types, nil
 }
 
+func UpdateTypeOfRegister(id string, partyShare string) error {
+	if id == "" {
+		return errors.New("arguments cannot be empty. the correct format is 'update <id> <partyShare>'")
+	}
+	partyShareFLOAT, err := strconv.ParseFloat(partyShare, 32)
+	if err != nil {
+		return errors.New("invalid party share")
+	}
+	err = database.GetDB().GetTypeOfRegisterDB().UpdatePartyShare(id, partyShareFLOAT)
+	return err
+}
+
 func DeleteTypeOfRegister(id string) error {
 	if id == "" {
 		return errors.New("arguments cannot be empty. the correct format is 'delete <id>'")

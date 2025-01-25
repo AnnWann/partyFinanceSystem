@@ -86,3 +86,9 @@ func (db *TypeOfRegisterDB) DeleteType(id string) error {
 	_, err := db.Exec("DELETE FROM tipo_de_registro WHERE id = ?", id)
 	return err
 }
+
+
+func (db *TypeOfRegisterDB) UpdatePartyShare(id string, partyShare float64) error {
+	_, err := db.Exec("UPDATE tipo_de_registro SET partilha_partidaria = ? WHERE id = ?", partyShare, id)
+	return err
+}

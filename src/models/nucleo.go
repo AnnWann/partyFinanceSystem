@@ -6,4 +6,5 @@ type Nucleo struct {
 	City  string
 	State string
 	Credit float64
+	Payday string
 }

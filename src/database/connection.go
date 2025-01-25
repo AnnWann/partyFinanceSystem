@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"log"
+	"os"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -27,20 +28,29 @@ func (db *DBWrapper) GetConnection() *sql.DB {
 
 func (db *DBWrapper) InitDB(file string) {
 	var err error
+	_, err = os.Stat(file)
+	if os.IsNotExist(err) {
+		_, err = os.Create(file)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	db.DB, err = sql.Open("sqlite3", file)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	db.Exec("CREATE TABLE IF NOT EXISTS Partido (id INTEGER NOT NULL PRIMARY KEY," +
+	db.Exec("CREATE TABLE IF NOT EXISTS partido (id INTEGER NOT NULL PRIMARY KEY," +
 		"nome TEXT NOT NULL, " +
 		"credito FLOAT NOT NULL)")
 
-	db.Exec("CREATE TABLE Nucleo (id INTEGER NOT NULL PRIMARY KEY," + 
+	db.Exec("CREATE TABLE nucleo (id INTEGER NOT NULL PRIMARY KEY," + 
 		"nome TEXT NOT NULL, " +
 		"cidade TEXT NOT NULL, " +
 		"estado TEXT NOT NULL, " +
-		"credito FLOAT NOT NULL)")
+		"credito FLOAT NOT NULL," + 
+		"dia_de_pagamento TEXT NOT NULL)")
 
 	db.Exec("CREATE TABLE IF NOT EXISTS pessoas (id INTEGER NOT NULL PRIMARY KEY," +
 		"nome TEXT NOT NULL, " +
@@ -92,9 +102,5 @@ func (db *DBWrapper) InitDB(file string) {
 		"FOREIGN KEY (vendas) REFERENCES registro(id)" + 
 		"FOREIGN KEY (nucleo) REFERENCES nucleo(id))")
 
-	db.Exec("CREATE TABLE IF NOT EXISTS dia_de_pagamento (dia_de_pagamento TEXT NOT NULL)")
-	db.Exec("INSERT OR IGNORE INTO dia_de_pagamento (dia_de_pagamento) VALUES (10)")
-	db.Exec("INSERT OR IGNORE INTO pessoas (id, nome, papel, contribuicao_mensal, credito) VALUES ('nucleo', 'nucleo', 'nucleo', 0, 0)")
-	db.Exec("INSERT OR IGNORE INTO pessoas (id, nome, papel, contribuicao_mensal, credito) VALUES ('partido', 'partido', 'partido', 0, 0)")
 	db.Exec("INSERT OR IGNORE INTO pessoas (id, nome, papel, contribuicao_mensal, credito) VALUES ('externo', 'externo', 'externo', 0, 0)")
 }

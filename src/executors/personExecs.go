@@ -90,10 +90,40 @@ func Promote(id string, role string) error {
 	return err
 }
 
-func DeletePerson(id string) error {
-	if id == "" {
-		return errors.New("arguments cannot be empty. the correct format is 'delete <id>'")
+func UpdatePerson(id string, nucleo string, payment string) error {
+
+	db := database.GetDB().GetPersonDB()
+	if nucleo != "" {
+		nucleoInt, err := strconv.Atoi(nucleo)
+		if err != nil {
+			return errors.New("Núcleo deve ser um número")
+		}
+		nucleoExists := database.GetDB().GetNucleoDB().NucleoExists(nucleoInt)
+		if !nucleoExists {
+			return errors.New("Núcleo não existe")
+		}
+		err = db.UpdateNucleo(id, nucleoInt)
+		if err != nil {
+			return err
+		}
 	}
+
+	if payment != "" {
+		paymentFloat, err := strconv.ParseFloat(payment, 64)
+		if err != nil {
+			return errors.New("Pagamento deve ser um número")
+		}
+		err = db.UpdateMonthlyContribution(id, paymentFloat)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+	
+}
+
+func DeletePerson(id string) error {
 	err := database.GetDB().GetPersonDB().DeletePerson(id)
 	return err
 }

@@ -71,7 +71,7 @@ func (op *Options) GetPerson(modifiers map[string]string) {
 	}
 
 	for _, person := range persons {
-		fmt.Println("dados da pessoa:\n id: %s\nnome: %s\npapel: %s\nnucleo: %s\ncontribuição mensal: %s\ncredito: %s", person.Id, person.Name, person.Role, person.Nucleo, person.MonthlyPayment, person.Credit)
+		fmt.Printf("dados da pessoa:\n id: %s\nnome: %s\npapel: %s\nnucleo: %d\ncontribuição mensal: %f\ncredito: %f\n", person.Id, person.Name, person.Role, person.Nucleo, person.MonthlyPayment, person.Credit)
 	}	
 }
 
@@ -87,7 +87,7 @@ func (op *Options) GetRegister(modifiers map[string]string) {
 	}
 
 	for _, reg := range register {
-		fmt.Println("dados do registro:\n id: %s\ndia: %s\nmês: %s\nano: %squantidade: %svalor: %s\ntipo: %s\nnucleo: %s\ndoador: %s\nrecebedor: %s\ndescrição: %s", reg.Id, reg.Day, reg.Month, reg.Year, reg.Amount, reg.Value, reg.Type, reg.Nucleo, reg.Giver, reg.Receiver, reg.Description)
+		fmt.Printf("dados do registro:\n id: %d\ndia: %s\nmês: %s\nano: %squantidade: %dvalor: %f\ntipo: %d\nnucleo: %d\ndoador: %s\nrecebedor: %s\ndescrição: %s\n", reg.Id, reg.Day, reg.Month, reg.Year, reg.Amount, reg.Value, reg.Type, reg.Nucleo, reg.Giver, reg.Receiver, reg.Description)
 	}
 }
 
@@ -111,7 +111,7 @@ func (op *Options) GetReport(modifiers map[string]string) {
 
 	pdf_folder := os.Getenv("PDF_FOLDER")
 
-	fmt.Println("Relatórios gerados em: %s", pdf_folder)
+	fmt.Printf("Relatórios gerados em: %s\n", pdf_folder)
 }
 
 func (op *Options) GetTypeOfRegister(nucleoId string) {
@@ -122,7 +122,7 @@ func (op *Options) GetTypeOfRegister(nucleoId string) {
 	}
 
 	for _, tReg := range typeOfRegister {
-		fmt.Println("dados do tipo de registro:\n id: %s\nnome: %s\nnucleo: %s\ndescrição: %s\npartilha partidária: %s", tReg.Id, tReg.Name, tReg.Nucleo, tReg.Description, tReg.PartyShare)
+		fmt.Printf("dados do tipo de registro:\n id: %d\nnome: %s\nnucleo: %s\ndescrição: %s\npartilha partidária: %f\n", tReg.Id, tReg.Name, tReg.Nucleo, tReg.Description, tReg.PartyShare)
 	}
 	}
 
@@ -138,7 +138,7 @@ func (op *Options) GetNucleo(modifiers map[string]string) {
 	}
 
 	for _, nucleo := range nucleos {
-		fmt.Println("dados do nucleo:\n id: %s\nnome: %s\ncidade: %s\nestado: %s\ncredito: %s", nucleo.Id, nucleo.Name, nucleo.City, nucleo.State, nucleo.Credit)
+		fmt.Printf("dados do nucleo:\n id: %d\nnome: %s\ncidade: %s\nestado: %s\ncredito: %f\ndia de pagamento: %s\n", nucleo.Id, nucleo.Name, nucleo.City, nucleo.State, nucleo.Credit, nucleo.Payday)
 	}
 }
 
@@ -148,7 +148,7 @@ func (op *Options) GetPartido() {
 		fmt.Println(err)
 	}
 
-	fmt.Println("dados do partido:\n id: %s\nnome: %s\ncredito: %s", partido.Id, partido.Name, partido.Credit)
+	fmt.Printf("dados do partido:\n id: %d\nnome: %s\ncredito: %f", partido.Id, partido.Name, partido.Credit)
 }
 
 
@@ -158,7 +158,7 @@ func (op *Options) GetPayday(nucleoId string) {
 		fmt.Println(err)
 	}
 
-	fmt.Println("dia de pagamento: %s", payday)
+	fmt.Printf("dia de pagamento: %s", payday)
 }
 
 

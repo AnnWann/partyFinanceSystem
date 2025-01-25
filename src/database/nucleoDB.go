@@ -25,7 +25,7 @@ func (db *NucleoDB) GetNextId() (int, error) {
 }
 
 func (db *NucleoDB) InsertNucleo(nucleo models.Nucleo) error {
-	_, err := db.Exec("INSERT INTO nucleo (id, nucleo, cidade, estado, credito) VALUES (?, ?)", nucleo.Name, nucleo.City, nucleo.State, nucleo.Credit)
+	_, err := db.Exec("INSERT INTO nucleo (id, nucleo, cidade, estado, credito, dia_de_pagamento) VALUES (?, ?, ?, ?, ?, ?)", nucleo.Name, nucleo.City, nucleo.State, nucleo.Credit, nucleo.Payday)
 	return err
 }
 
@@ -101,6 +101,12 @@ func (db *NucleoDB) UpdateCredit(id int, credit float64) error {
 	_, err := db.Exec("UPDATE nucleo SET credito = ? WHERE id = ?", credit, id)
 	return err
 }
+
+func (db *NucleoDB) UpdatePayday(id int, dia string) error {
+	_, err := db.Exec("UPDATE nucleo SET dia_de_pagamento = ? WHERE id = ?", dia, id)
+	return err
+}
+
 
 func (db *NucleoDB) DeleteNucleo(id int) error {
 	_, err := db.Exec("DELETE FROM nucleo WHERE id = ?", id)

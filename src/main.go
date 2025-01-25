@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 
 	"github.com/AnnWann/pstu_finance_system/src/database"
@@ -19,7 +20,11 @@ func main() {
 
 	for {
 		input, _ = reader.ReadString('\n')
-		command, modifiers, arguments := parser.Parse(input)
+		command, modifiers, arguments, err := parser.Parse(input)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
 
 		terminal.HandleOption(command, modifiers, arguments)
 	}
