@@ -31,4 +31,4 @@ test:
 	go test $(TST_DIR)
 
 check-env:
-	@if [ ! -f $(ENV_FILE) ]; then echo "Creating $(ENV_FILE)"; touch $(ENV_FILE); fi
+	@if [ ! -f $(ENV_FILE) ]; then echo "Creating $(ENV_FILE)"; echo -e "PDF_FOLDER=./reports\nDB_PATH=./database" > $(ENV_FILE); fi
