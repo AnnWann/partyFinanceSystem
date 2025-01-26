@@ -1,121 +1,52 @@
-# PSTU FINANCE SYSTEM
+# PARTY FINANCE SYSTEM / SISTEMA FINANCEIRO DE PARTIDO
 
-This is an app made to handle the finantial necessities of a political party's core.
+This is an app made to handle the financial needs of a political party that's organized into smaller cores. 
+Isto é um aplicativo feito para organizar as necessidades de um partido político organizado em nucleos.
 
-It stores user's data and finantial registers, builds monthly and yearly reports (not implemeted yet) and prints a PDF file of said reports.
 
-## Instalation
+It stores user's data and financial registers, builds monthly and yearly reports and prints a PDF file of said reports.
+Suas funções incluem armazenar dados de usuários e registros financeiros, construir relatórios mensais e anuais e imprimir os relatórios em arquivos PDF. 
 
-Download source from https://github.com/AnnWann/partyCoreFinantialSystem
-Download binary from (not implemented)
-Use browser version at (not implemented)
+## Instalation / Instalação
 
-## Usage
+Download source from/instale fonte de: https://github.com/AnnWann/partyCoreFinantialSystem
+Download binary from/instale binário de: (not implemented)
+Use browser version at/use versão no navegador em: (not implemented)
+
+## Usage / Uso
 
 You use this app by two means: cli tool or browser interface (not implemented). 
+Existem dois meios de usar esse aplicativo: a ferramenta command-line e a interface de browser (não implementada)
 
-### Cli Tool
+### Cli Tool / Ferramenta Command-line
 
-To run:
+**Pre-Requisites/Pré-requisitos**
 
-    $ ./pstu_finance_system
+There is no pre-requisite if you're running from the binary. 
+Não existe nenhum pré-requisito se você está rodando do binário. 
 
-If running from source:
+For the source version, you will need `make` and `go` installed, as well as their own pre-requisites.
+Para rodar a versão de fonte, você vai precisar de `make` e `go` instalado, como também os seus respectivos pré-requisitos. 
 
-    $ go build
-    $ ./pstu_finance_system
+**To run from source/Para rodar da fonte**
 
-The commands are:
+    $ make all
 
-    $ get person --all - Gets all persons
-    $ get person --members - Gets all members
-    $ get person <id> - Gets one person
-    $ get person --byName - Gets one person by name
-    $ get register <id> - Gets one register
-    $ get register --all - Gets all registers
-    $ get register --byMonthAndYear <month> <year> - Gets all registers by month and year
-    $ get register --byYear <year>- Gets all registers by year
-    $ get report <month> <year> - Gets one report
-    $ get report <year> - Gets the report of the year (not implemented)
-    $ get payday - Gets the payday
-    $ add person - Adds a person
-    $ add register <day> <month> <year> <type> <giver> <receiver> <amount> <value> <partyShare> <description> - Adds a register
-    $ set payday <day> - Sets the payday
-    $ promote <id> - Promotes a person to militant
-    $ promote <promoteeId> <demoteeId> - swaps roles (demotee must be some kind of leader)
+That will generate an executable file and execute it in your terminal.
+Isto vai gerar um arquivo executavél e executá-lo dentro de seu terminal. 
 
-To understand what each variable is, see at [CLI VARIABLES](#cli-variables)
+**For this version**, the binary program will by default generate a .db file inside of `./database` and store the PDFs inside of `./reports`.
+**Nesta versão**, por padrão o programa binário irá criar um arquivo .db dentro de `./database` e armazenar os PDFs dentro de `./reports`.
+
+Se você está usando a versão fonte, você pode alterar onde o banco e os PDFs vão ser armazenados usando ´echo "echo -e "PDF_FOLDER=<your-pdf-file>\nDB_PATH=<your-database-folder>"
+
+To know more about the usage of the CLI tool, use `$ help` or access ["docs/CLI_TOOL_USAGE.md"](./docs/CLI_TOOL_USAGE.md)
+Para saber mais sobre o uso do terminal, use `$ help` ou acesse ["docs/CLI_TOOL_USAGE.md"](./docs/CLI_TOOL_USAGE.md)
 
 ### Browser interface
 
-The browser interface is very intuitive. 
-
-## CLI VARIABLES
-
-person.name string 
-
-    the person's name
-
-person.role string
-
-    the person's role
-    can be:
-
-        "party", "core", "leader", "financesLeader", "militant", "aspirant", "outsider"
-
-    contraints:
-
-        There must be a "party", "core" and "outsider" in the database
-        There is only one of "party", "core" and "outsider" in the database.
-        There can only be one "leader" and "financesLeader"
-        There must be at least 2 militants to add an aspirant
-        If the database has 1 militant, this militant will be promoted to leader
-        If the database has 2 militants, the second will be promoted to "financesLeader"
-        If a "Leader" or "financesLeader" is demoted, a militant must be promoted with the corresponding role
-
-register.day string
-
-    day of the month (number) that the register was made. 
-
-register.month string
-
-    month (number) that the register was made. 
-
-register.year string
-
-    year (number) that the register was made. 
-
-register.type string
-
-    the type of register
-    can be: 
-    
-        "payment", "journal", "other", "expense"
-
-register.giver string
-
-    id of the person who paid for it
-
-register.receiver string
-
-    id of the person who paid for it
-
-register.amount int
-
-    the amount of items involved in the register
-
-register.value float
-
-    the monetary value of the register
-
-register.partyShare float
-
-    the share of the register that belongs to the party
-
-register.description string
-
-    a brief description of the register
-
+Go to ...
+Acesse ...
 
 
 
