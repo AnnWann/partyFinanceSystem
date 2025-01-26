@@ -21,3 +21,15 @@ func GetVariable(name string) string {
 
 	return variableTable[name]
 }
+
+func DeleteVariable(name string) {
+	if variableTable == nil {
+		return
+	}
+
+	delete(variableTable, name)
+}
+
+func ClearVariableTable() {
+	variableTable = nil
+}
