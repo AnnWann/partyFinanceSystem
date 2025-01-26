@@ -5,7 +5,7 @@ This is an app made to handle the financial needs of a political party that's or
 
 
 It stores user's data and financial registers, builds monthly and yearly reports and prints a PDF file of said reports. \
-<span style="color:#808b96">Suas funções incluem armazenar dados de usuários e registros financeiros, construir relatórios mensais e anuais e imprimir os relatórios em arquivos PDF.</span>
+<span style="color:blue">Suas funções incluem armazenar dados de usuários e registros financeiros, construir relatórios mensais e anuais e imprimir os relatórios em arquivos PDF.</span>
 
 ## Instalation / Instalação
 
