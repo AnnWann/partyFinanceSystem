@@ -2,17 +2,26 @@
 BUILD_DIR := build
 SRC_DIR := ./src/...
 TST_DIR := ./test/...
+ENV_FILE := .env
 
 # Targets
-.PHONY: all build run clean test
+.PHONY: all run-b build run clean test
 
-all: build
+all: run-b
 
-build:
-	mkdir -p $(BUILD_DIR)
-	go build -o $(BUILD_DIR)/main $(SRC_DIR)
+run-b: 
+	build
+	./$(BUILD_DIR)/main
 
-run:
+build: 
+	check-env
+	@if [ ! -d $(BUILD_DIR) ]; then 
+	mkdir -p $(BUILD_DIR);
+	go build -o $(BUILD_DIR)/main $(SRC_DIR);
+	fi
+
+run: 
+	check-env
 	go run $(SRC_DIR)
 
 clean:
@@ -20,3 +29,6 @@ clean:
 
 test:
 	go test $(TST_DIR)
+
+check-env:
+	@if [ ! -f $(ENV_FILE) ]; then echo "Creating $(ENV_FILE)"; touch $(ENV_FILE); fi
