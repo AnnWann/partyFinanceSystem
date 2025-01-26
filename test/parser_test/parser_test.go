@@ -1,10 +1,11 @@
-package parser_test
+package test
 
 import (
 	"reflect"
 	"testing"
 
 	"github.com/AnnWann/pstu_finance_system/src/parser"
+	"github.com/AnnWann/pstu_finance_system/src/views/terminal"
 )
 
 func TestParseSucceding(t *testing.T) {
@@ -16,18 +17,21 @@ func TestParseSucceding(t *testing.T) {
 
 	tests := []struct {
 		signature int
-		input    string
-		expected Expected
+		input     string
+		expected  Expected
 	}{
 		{1, "", Expected{"", nil, nil}},
 		{2, "command", Expected{"command", nil, nil}},
-		{3,"command --option", Expected{"command", map[string]string{"--option": ""}, nil}},
+		{3, "command --option", Expected{"command", map[string]string{"--option": ""}, nil}},
 		{4, "command --option value", Expected{"command", map[string]string{"--option": ""}, []string{"value"}}},
 		{5, "command --option value value2", Expected{"command", map[string]string{"--option": ""}, []string{"value", "value2"}}},
 		{6, "command --option --option2", Expected{"command", map[string]string{"--option": "", "--option2": ""}, nil}},
 		{7, "command --option --option2 value", Expected{"command", map[string]string{"--option": "", "--option2": "value"}, nil}},
 		{8, "command --option --option2 value --option3 value2", Expected{"command", map[string]string{"--option": "", "--option2": "value", "--option3": "value2"}, nil}},
+		{9, "command value value2", Expected{"command", nil, []string{"value", "value2"}}},
 	}
+
+	defer terminal.ClearVariableTable()
 
 	for _, test := range tests {
 		option, modifiers, arguments, err := parser.Parse(test.input)
