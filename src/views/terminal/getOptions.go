@@ -56,10 +56,6 @@ func (op *Options) Get() {
 }
 
 func (op *Options) GetPerson(modifiers map[string]string) {
-	if len(modifiers) == 0 {
-		fmt.Println("Commando invalido, considere: " + op.Commands["get"] + " " + op.GetModifiers["--membro"])
-		return
-	}
 
 	persons, err := executors.GetMembro(modifiers)
 
@@ -74,10 +70,6 @@ func (op *Options) GetPerson(modifiers map[string]string) {
 }
 
 func (op *Options) GetRegister(modifiers map[string]string) {
-	if len(modifiers) == 0 {
-		fmt.Println("Commando invalido, considere: " + op.Commands["get"] + " " + op.GetModifiers["--registro"])
-		return
-	}
 
 	register, err := executors.GetRegistro(modifiers)
 	if err != nil {
@@ -90,10 +82,6 @@ func (op *Options) GetRegister(modifiers map[string]string) {
 }
 
 func (op *Options) GetReport(modifiers map[string]string) {
-	if len(modifiers) == 0 {
-		fmt.Println("Commando invalido, considere: " + op.Commands["get"] + " " + op.GetModifiers["--relatorio"])
-		return
-	}
 
 	relatorios, err := executors.GetRelatorioMensal(modifiers)
 	if err != nil {
@@ -120,10 +108,6 @@ func (op *Options) GetTypeOfRegister(nucleoId string) {
 }
 
 func (op *Options) GetNucleo(modifiers map[string]string) {
-	if len(modifiers) == 0 {
-		fmt.Println("Commando invalido, considere: " + op.Commands["get"] + " " + op.GetModifiers["--nucleo"])
-		return
-	}
 
 	nucleos, err := executors.GetNucleo(modifiers)
 	if err != nil {
