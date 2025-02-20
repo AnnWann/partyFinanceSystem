@@ -1,131 +1,110 @@
 package reportManager
 
 import (
+	"strconv"
+
 	"github.com/AnnWann/pstu_finance_system/src/database"
 	"github.com/AnnWann/pstu_finance_system/src/models"
 )
 
-func BuildMonthlyReport(month string, year string, nucleoId int) (models.MonthReport, models.Register, error) {
+func BuildRelatorioMensal(month string, year string, nucleoId int) (models.Relatorio_mensal_complexo, models.Registro, error) {
 
 	db := database.GetDB()
 
-	registersOfTheMonth, err := db.GetRegisterDB().GetRegisterByMonthAndYear(month, year)
+	registrosDoMes, err := db.GetRegisterDB().GetRegisterByMonthAndYear(month, year)
 	if err != nil {
-		return models.MonthReport{}, models.Register{}, err
+		return models.Relatorio_mensal_complexo{}, models.Registro{}, err
 	}
 
-	personDB := db.GetPersonDB()
-	members, err := personDB.GetPersonByNucleo(nucleoId)
+	membroDB := db.GetMembroDB()
+	membros, err := membroDB.GetMembroByNucleo(nucleoId)
 	if err != nil {
-		return models.MonthReport{}, models.Register{}, err
+		return models.Relatorio_mensal_complexo{}, models.Registro{}, err
 	}
 
 	nucleo, err := db.GetNucleoDB().GetNucleoById(nucleoId)
 	if err != nil {
-		return models.MonthReport{}, models.Register{}, err
+		return models.Relatorio_mensal_complexo{}, models.Registro{}, err
 	}
 
 	partido, err := db.GetPartidoDB().GetPartido()
 	if err != nil {
-		return models.MonthReport{}, models.Register{}, err
+		return models.Relatorio_mensal_complexo{}, models.Registro{}, err
 	}
 
-	typesOfRegisters, err := db.GetTypeOfRegisterDB().GetTypesByNucleo(nucleoId)
+	tiposDeRegistros, err := db.GetTiposDeRegistroDB().GetTipoPorNucleo(nucleoId)
 	if err != nil {
-		return models.MonthReport{}, models.Register{}, err
+		return models.Relatorio_mensal_complexo{}, models.Registro{}, err
 	}
 
-	membersMap := make(map[string]models.Person)
-	for _, m := range members {
-		membersMap[m.Id] = m
+	membrosMAP := make(map[int]models.Membro)
+	for _, m := range membros {
+		membrosMAP[m.ID] = m
 	}
 
-	var paymentsId int
-	for _, t := range typesOfRegisters {
-		if t.Name == "pagamento" {
-			paymentsId = t.Id
+	registrosPorTipo := getRegistrosPorTipo(registrosDoMes, tiposDeRegistros)
+
+	contribuicaoId := db.GetTiposDeRegistroDB().GetContribuicaoId()
+	gastosId := db.GetTiposDeRegistroDB().GetGastosId()
+
+	contribuicao := registrosPorTipo[contribuicaoId]
+	membrosAposPagamento := applyMemberPayments(&contribuicao, membros)
+	registrosPorTipo[contribuicaoId] = contribuicao
+
+	registrosEspecificos := extractRegistrosEspecificosDeNucleo(registrosPorTipo)
+
+	jornalId := db.GetTiposDeRegistroDB().GetJornalId()
+	var parcela_partidaria_jornal float64
+	for _, t := range tiposDeRegistros {
+		if t.ID == jornalId {
+			parcela_partidaria_jornal = t.Parcela_partidaria
 			break
 		}
 	}
 
-	membersReport, membersAfterPaying, err := getMemberPayments(registersOfTheMonth, members, paymentsId)
-	if err != nil {
-		return models.MonthReport{}, models.Register{}, err
+	reportId := strconv.Itoa(nucleoId) + "-" + month + "/" + year
+
+	total_ganho := registrosEspecificos.Total + registrosPorTipo[contribuicaoId].Total + registrosPorTipo[jornalId].Total
+	total_liquido := total_ganho - registrosPorTipo[gastosId].Total
+
+	partilha_partidaria_especifica := calcPartilhaPartidariaEspecifica(tiposDeRegistros, registrosEspecificos.Tipos)
+	partilha_partidaria := partilha_partidaria_especifica + registrosPorTipo[contribuicaoId].Total + float64(len(registrosPorTipo[jornalId].Registros))*parcela_partidaria_jornal
+
+	lucro_nucleo := total_liquido - partilha_partidaria
+
+	report := models.Relatorio_mensal_complexo{
+		ID:                      reportId,
+		Mes:                     month,
+		Ano:                     year,
+		Membros:                 membrosMAP,
+		Membros_apos_pagamentos: membrosAposPagamento,
+		Nucleo:                  nucleo,
+		Partido:                 partido,
+		Pagamentos_de_membros:   registrosPorTipo[contribuicaoId],
+		Vendas_jornal:           registrosPorTipo[db.GetTiposDeRegistroDB().GetJornalId()],
+		Gastos:                  registrosPorTipo[gastosId],
+		Registros_especificos:   registrosEspecificos,
+		Total_Ganho:             total_ganho,
+		Total_Liquido:           total_liquido,
+		Pagamento_Partidario:    partilha_partidaria,
+		Lucro_Nucleo:            lucro_nucleo,
+		Link_Arquivo:            "",
 	}
 
-	Sales := models.Sales{}
-	var expensesId int
-	for _, t := range typesOfRegisters {
-		if t.Name == "pagamento" {
-			continue
-		}
-		if t.Name == "despesa" {
-			expensesId = t.Id
-			continue
-		}
+	registro_partilha_partidaria := db.GetRegisterDB().GetNextId()
 
-		registers, totalSales := getSales(registersOfTheMonth, t.Id)
-
-		Sales.EachType[t] = models.SubReport{
-			Registers: registers,
-			Type:      t.Name,
-			Total:     totalSales,
-		}
-
-		Sales.TotalSales += totalSales
-	}
-
-	expensesReport := getExpenses(registersOfTheMonth, expensesId)
-
-	reportId := nucleo.Name + "-" + month + "/" + year
-
-	totalEarned := Sales.TotalSales + membersReport.Total
-	totalLiquid := totalEarned - expensesReport.Total
-
-	SalesPartyShare := calcPartyShare(Sales.EachType)
-	PartyDebts := SalesPartyShare + membersReport.Total
-
-	CoreSurplus := totalLiquid - PartyDebts
-
-	report := models.MonthReport{
-		Id:                 reportId,
-		Month:              month,
-		Year:               year,
-		Members:            membersMap,
-		MembersAfterPaying: membersAfterPaying,
-		Nucleo:             nucleo,
-		Partido:            partido,
-		MembersPayments:    membersReport,
-		Expenses:           expensesReport,
-		Sales:              Sales,
-		TotalEarned:        totalEarned,
-		TotalLiquid:        totalLiquid,
-		PartyDebts:         PartyDebts,
-		CoreSurplus:        CoreSurplus,
-	}
-
-	payday, err := db.GetPaydayDB().GetPayday(nucleoId)
-	if err != nil {
-		return models.MonthReport{}, models.Register{}, err
-	}
-
-	partyDebtsRegisterId, err := db.GetRegisterDB().GetNextId()
-	if err != nil {
-		return models.MonthReport{}, models.Register{}, err
-	}
-
-	partyDebtsRegister := models.Register{
-		Id:          partyDebtsRegisterId,
-		Day:         payday,
-		Month:       month,
-		Year:        year,
+	partyDebtsRegister := models.Registro{
+		ID:          registro_partilha_partidaria,
+		Dia:         nucleo.Dia_de_Pagamento,
+		Mes:         month,
+		Ano:         year,
 		Nucleo:      nucleoId,
-		Giver:       "",
-		Receiver:    "",
-		Type:        paymentsId,
-		Description: "Pagamento ao partido",
-		Value:       PartyDebts,
-		Amount:      1,
+		Pago_por:    nucleoId,
+		Cobrado_por: db.GetPartidoDB().GetPartidoId(),
+		Tipo:        database.GetDB().GetTiposDeRegistroDB().GetPagamentoPartido(),
+		Descricao:   "Pagamento ao partido",
+		Valor:       partilha_partidaria,
+		Quantidade:  1,
 	}
 
 	return report, partyDebtsRegister, err

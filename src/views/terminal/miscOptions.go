@@ -17,6 +17,10 @@ func (op *Options) Help() {
 			for mk, mv := range op.GetModifiers {
 				fmt.Printf("  %s: %s\n", mk, mv)
 			}
+		case "update":
+			for mk, mv := range op.UpdateModifiers {
+				fmt.Printf("  %s: %s\n", mk, mv)
+			}
 		case "remove":
 			for mk, mv := range op.RemoveModifiers {
 				fmt.Printf("  %s: %s\n", mk, mv)

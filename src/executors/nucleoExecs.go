@@ -11,23 +11,18 @@ import (
 func AddNucleo(nome, cidade, estado, payday string) (int, error) {
 	db := database.GetDB().GetNucleoDB()
 
-	id, err := db.GetNextId()
-	if err != nil {
-		return 0, errors.New("erro ao obter o próximo id")
-	}
-
 	nucleo := models.Nucleo{
-		Id:     id,
-		Name:   nome,
-		City:   cidade,
-		State:  estado,
-		Credit: 0,
-		Payday: payday,
+		ID:               -1,
+		Nome:             nome,
+		Cidade:           cidade,
+		Estado:           estado,
+		Reserva:          0,
+		Dia_de_Pagamento: payday,
 	}
 
-	err = db.InsertNucleo(nucleo)
+	id, err := db.InsertNucleo(nucleo)
 	if err != nil {
-		return 0, errors.New("erro ao inserir o nucleo")
+		return 0, err
 	}
 
 	return id, nil
@@ -63,15 +58,15 @@ func DeleteNucleo(id string) error {
 		return errors.New("id inválido")
 	}
 
-	pDb := DB.GetPersonDB()
-	persons, err := pDb.GetPersonByNucleo(idInt)
+	pDb := DB.GetMembroDB()
+	persons, err := pDb.GetMembroByNucleo(idInt)
 	if err != nil {
 		tx.Rollback()
 		return errors.New("erro ao deletar o nucleo")
 	}
 
 	for _, person := range persons {
-		err = pDb.DeletePerson(person.Id)
+		err = pDb.DeleteMembro(person.ID)
 		if err != nil {
 			tx.Rollback()
 			return errors.New("erro ao deletar o nucleo")
@@ -114,13 +109,13 @@ func filterNucleo(nucleo models.Nucleo, filterOptions map[string]string) bool {
 			if err != nil {
 				return false
 			}
-			isValid = nucleo.Id == id
-		case "--name":
-			isValid = nucleo.Name == value
-		case "--city":
-			isValid = nucleo.City == value
-		case "--state":
-			isValid = nucleo.State == value
+			isValid = nucleo.ID == id
+		case "--nome":
+			isValid = nucleo.Nome == value
+		case "--cidade":
+			isValid = nucleo.Cidade == value
+		case "--estado":
+			isValid = nucleo.Estado == value
 		}
 	}
 	return isValid
@@ -133,7 +128,7 @@ func UpdatePayday(id, payday string) error {
 	}
 
 	db := database.GetDB().GetNucleoDB()
-	err = db.UpdatePayday(nucleoId, payday)
+	err = db.UpdateDiaDePagamento(nucleoId, payday)
 	if err != nil {
 		return errors.New("erro ao atualizar o dia de pagamento")
 	}

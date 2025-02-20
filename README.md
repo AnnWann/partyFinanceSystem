@@ -1,6 +1,5 @@
 # PARTY FINANCE SYSTEM / SISTEMA FINANCEIRO DE PARTIDO
 
-
 This is an app made to handle the financial needs of a political party that's organized into smaller cores. \
 Isto é um aplicativo feito para organizar as necessidades de um partido político organizado em nucleos.
 
@@ -28,7 +27,7 @@ Não existe nenhum pré-requisito se você está rodando do binário.
 For the source version, you will need `make` and `go` installed, as well as their own pre-requisites. \
 Para rodar a versão de fonte, você vai precisar de `make` e `go` instalado, como também os seus respectivos pré-requisitos.
 
-**To run from source/<span style="color:#808b96">Para rodar da fonte/span>**
+**To run from source/Para rodar da fonte**
 
     $ make all
 

@@ -9,24 +9,28 @@ import (
 )
 
 func (op *Options) Add() {
-	if len(op.Arguments) == 0 {
-		fmt.Println("Adicionar o que? Use 'add --person' ou 'add --register'")
+	if len(op.Modifiers) == 0 {
+		fmt.Println("Adicionar o que? Use:\n" + "'add --membro: " + op.AddModifiers["--membro"] + "'\n" + "Use 'add --registro: " + op.AddModifiers["--registro"] + "'\n" + "Use 'add --tipoDeRegistro: " + op.AddModifiers["--tipoDeRegistro"] + "'\n" + "Use 'add --nucleo: " + op.AddModifiers["--nucleo"] + "'\n" + "Use 'add --relatorio: " + op.AddModifiers["--relatorio"] + "'")
 		return
 	}
 
-	switch op.Arguments[0] {
-	case "--person":
-		op.AddPerson(op.Arguments[1:])
-	case "--register":
-		op.AddRegister(op.Arguments[1:])
-	case "--typeOfRegister":
-		op.AddTypeOfRegister(op.Arguments[1:])
+	var firstModifier string
+	for key := range op.Modifiers {
+		firstModifier = key
+		break
+	}
+
+	switch firstModifier {
+	case "--membro":
+		op.AddPerson(op.Arguments)
+	case "--registro":
+		op.AddRegister(op.Arguments)
+	case "--tipoDeRegistro":
+		op.AddTypeOfRegister(op.Arguments)
 	case "--nucleo":
-		op.AddNucleo(op.Arguments[1:])
-	case "--partido":
-		op.AddPartido(op.Arguments[1:])
-	case "--report":
-		op.AddReport(op.Arguments[1:])
+		op.AddNucleo(op.Arguments)
+	case "--relatorio":
+		op.AddReport(op.Arguments)
 	default:
 		fmt.Println("Modificador inválido")
 	}
@@ -34,24 +38,24 @@ func (op *Options) Add() {
 
 func (op *Options) AddPerson(Arguments []string) {
 	if len(Arguments) == 0 {
-		fmt.Println("Commando invalido, considere: " + op.Commands["add"] + " " + op.AddModifiers["--person"])
+		fmt.Println("Commando invalido, considere: " + op.Commands["add"] + " " + op.AddModifiers["--membro"])
 		return
 	}
 
 	nome := Arguments[0]
 	nucleo := Arguments[1]
-	id, err := executors.AddPerson(nome, nucleo)
+	id, err := executors.AddMembro(nome, nucleo)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	fmt.Printf("%s adicionada com sucesso com id: %s\n", nome, id)
+	fmt.Printf("%s adicionada com sucesso com id: %d\n", nome, id)
 }
 
 func (op *Options) AddRegister(Arguments []string) {
 	if len(Arguments) < 10 {
-		fmt.Println("Commando invalido, considere: " + op.Commands["add"] + " " + op.AddModifiers["--register"])
+		fmt.Println("Commando invalido, considere: " + op.Commands["add"] + " " + op.AddModifiers["--registro"])
 		return
 	}
 
@@ -65,7 +69,7 @@ func (op *Options) AddRegister(Arguments []string) {
 	quantidade := Arguments[7]
 	valor := Arguments[8]
 	descricao := Arguments[9]
-	id, err := executors.AddRegister(day, month, year, nucleo, tipo, doador, receptor, quantidade, valor, descricao)
+	id, err := executors.AddRegistro(day, month, year, nucleo, tipo, doador, receptor, quantidade, valor, descricao)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -76,7 +80,7 @@ func (op *Options) AddRegister(Arguments []string) {
 
 func (op *Options) AddTypeOfRegister(Arguments []string) {
 	if len(Arguments) < 4 {
-		fmt.Println("Commando invalido, considere: " + op.Commands["add"] + " " + op.AddModifiers["--typeOfRegister"])
+		fmt.Println("Commando invalido, considere: " + op.Commands["add"] + " " + op.AddModifiers["--tipoDeRegistro"])
 		return
 	}
 
@@ -85,7 +89,7 @@ func (op *Options) AddTypeOfRegister(Arguments []string) {
 	descricao := Arguments[2]
 	partilhaPartidaria := Arguments[3]
 
-	err := executors.AddTypeOfRegister(nome, nucleo, descricao, partilhaPartidaria)
+	err := executors.AddTipoDeRegistro(nome, nucleo, descricao, partilhaPartidaria)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -113,24 +117,9 @@ func (op *Options) AddNucleo(Arguments []string) {
 	fmt.Printf("Nucleo adicionado com sucesso com id: %d\n", id)
 }
 
-func (op *Options) AddPartido(Arguments []string) {
-	if len(Arguments) == 0 {
-		fmt.Println("Commando invalido, considere: " + op.Commands["add"] + " " + op.AddModifiers["--partido"])
-		return
-	}
-
-	err := executors.AddPartido(Arguments[0])
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	fmt.Println("Partido adicionado com sucesso com id: 1")
-}
-
 func (op *Options) AddReport(Arguments []string) {
 	if len(Arguments) == 0 {
-		fmt.Println("Commando invalido, considere: " + op.Commands["add"] + " " + op.AddModifiers["--report"])
+		fmt.Println("Commando invalido, considere: " + op.Commands["add"] + " " + op.AddModifiers["--relatorio"])
 		return
 	}
 
@@ -165,7 +154,7 @@ func (op *Options) AddReport(Arguments []string) {
 }
 
 func AddMonthReport(nucleo, month, year string) (string, string, error) {
-	id, path_to_pdf, err := executors.AddMonthlyReport(nucleo, month, year)
+	id, path_to_pdf, err := executors.AddRelatorioMensal(nucleo, month, year)
 	if err != nil {
 		return "", "", err
 	}

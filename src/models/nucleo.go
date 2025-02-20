@@ -1,10 +1,10 @@
 package models
 
 type Nucleo struct {
-	Id    int
-	Name  string
-	City  string
-	State string
-	Credit float64
-	Payday string
+	ID               int     `json:"id"`
+	Nome             string  `json:"nome"`
+	Cidade           string  `json:"cidade"`
+	Estado           string  `json:"estado"`
+	Reserva          float64 `json:"reserva"`
+	Dia_de_Pagamento string  `json:"dia_de_pagamento"`
 }

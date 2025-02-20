@@ -8,7 +8,7 @@ import (
 
 func (op *Options) Remove() {
 	if len(op.Modifiers) == 0 {
-		fmt.Println("Remover o que? Use 'remove --person', 'remove --register' ou 'remove --payday'")
+		fmt.Println("Remover o que? Use:\n '--pessoa:" + op.RemoveModifiers["--pessoa"] + "'\n'--tipoDeRegistro:" + op.RemoveModifiers["--tipoDeRegistro"] + "'\n'--nucleo:" + op.RemoveModifiers["--nucleo"] + "'")
 		return
 	}
 
@@ -24,9 +24,9 @@ func (op *Options) Remove() {
 	}
 
 	switch firstKey {
-	case "--person":
+	case "--pessoa":
 		op.RemovePerson(op.Arguments[0])
-	case "--typeOfRegister":
+	case "--tipoDeRegistro":
 		op.RemoveTypeOfRegister(op.Arguments[0])
 	case "--nucleo":
 		op.RemoveNucleo(op.Arguments[0])
@@ -38,7 +38,7 @@ func (op *Options) Remove() {
 
 func (op *Options) RemovePerson(id string) {
 
-	err := executors.DeletePerson(id)
+	err := executors.DeleteMembro(id)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -48,7 +48,7 @@ func (op *Options) RemovePerson(id string) {
 }
 
 func (op *Options) RemoveTypeOfRegister(id string) {
-	err := executors.DeleteTypeOfRegister(id)
+	err := executors.DeleteTipoDeRegistro(id)
 	if err != nil {
 		fmt.Println(err)
 		return

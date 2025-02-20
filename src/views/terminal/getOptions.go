@@ -2,15 +2,13 @@ package terminal
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/AnnWann/pstu_finance_system/src/executors"
-	"github.com/joho/godotenv"
 )
 
 func (op *Options) Get() {
 	if len(op.Modifiers) == 0 {
-		fmt.Println("Obter o que? Use 'get --person', 'get --register' ou 'get --payday'")
+		fmt.Println("Obter o que? Use:\n'--membro: " + op.Modifiers["--membro"] + "'\n'--registro: " + op.Modifiers["--registro"] + "'\n'--relatorio: " + op.Modifiers["--relatorio"] + "'\n'--diaDePagamento: " + op.Modifiers["--diaDePagamento"] + "'\n'--tipoDeRegistro: " + op.Modifiers["--tipoDeRegistro"] + "'\n'--nucleo: " + op.Modifiers["--nucleo"] + "'\n'-partido: " + op.Modifiers["--partido"] + "'")
 		return
 	}
 
@@ -29,19 +27,19 @@ func (op *Options) Get() {
 	}
 
 	switch firstKey {
-	case "--person":
+	case "--membro":
 		op.GetPerson(modifiersRest)
-	case "--register":
+	case "--registro":
 		op.GetRegister(modifiersRest)
-	case "--report":
+	case "--relatorio":
 		op.GetReport(modifiersRest)
-	case "--payday":
+	case "--diaDePagamento":
 		if len(op.Arguments) == 0 {
 			fmt.Println("Commando invalido, considere: " + op.Commands["get"] + " " + op.GetModifiers["--payday"])
 			return
 		}
 		op.GetPayday(op.Arguments[0])
-	case "--typeOfRegister":
+	case "--tipoDeRegistro":
 		if len(op.Arguments) == 0 {
 			fmt.Println("Commando invalido, considere: " + op.Commands["get"] + " " + op.GetModifiers["--typeOfRegister"])
 			return
@@ -59,11 +57,11 @@ func (op *Options) Get() {
 
 func (op *Options) GetPerson(modifiers map[string]string) {
 	if len(modifiers) == 0 {
-		fmt.Println("Commando invalido, considere: " + op.Commands["get"] + " " + op.GetModifiers["--person"])
+		fmt.Println("Commando invalido, considere: " + op.Commands["get"] + " " + op.GetModifiers["--membro"])
 		return
 	}
 
-	persons, err := executors.GetPerson(modifiers)
+	persons, err := executors.GetMembro(modifiers)
 
 	if err != nil {
 		fmt.Println(err)
@@ -71,60 +69,55 @@ func (op *Options) GetPerson(modifiers map[string]string) {
 	}
 
 	for _, person := range persons {
-		fmt.Printf("dados da pessoa:\n id: %s\nnome: %s\npapel: %s\nnucleo: %d\ncontribuição mensal: %f\ncredito: %f\n", person.Id, person.Name, person.Role, person.Nucleo, person.MonthlyPayment, person.Credit)
-	}	
+		fmt.Printf("dados da pessoa:\nid: %d\nnome: %s\ndesignacao: %d\nnucleo: %d\ncontribuição mensal: %.2f\ncredito: %.2f\n", person.ID, person.Nome, person.Designacao, person.Nucleo, person.Contribuicao_mensal, person.Credito)
+	}
 }
 
 func (op *Options) GetRegister(modifiers map[string]string) {
 	if len(modifiers) == 0 {
-		fmt.Println("Commando invalido, considere: " + op.Commands["get"] + " " + op.GetModifiers["--register"])
+		fmt.Println("Commando invalido, considere: " + op.Commands["get"] + " " + op.GetModifiers["--registro"])
 		return
 	}
 
-	register, err := executors.GetRegister(modifiers)
+	register, err := executors.GetRegistro(modifiers)
 	if err != nil {
 		fmt.Println(err)
 	}
 
 	for _, reg := range register {
-		fmt.Printf("dados do registro:\n id: %d\ndia: %s\nmês: %s\nano: %squantidade: %dvalor: %f\ntipo: %d\nnucleo: %d\ndoador: %s\nrecebedor: %s\ndescrição: %s\n", reg.Id, reg.Day, reg.Month, reg.Year, reg.Amount, reg.Value, reg.Type, reg.Nucleo, reg.Giver, reg.Receiver, reg.Description)
+		fmt.Printf("dados do registro:\nid: %d\ndia: %s\nmês: %s\nano: %s\nquantidade: %d\nvalor: %.2f\ntipo: %d\nnucleo: %d\npago_por: %d\ncobrado_por: %d\ndescrição: %s\n", reg.ID, reg.Dia, reg.Mes, reg.Ano, reg.Quantidade, reg.Valor, reg.Tipo, reg.Nucleo, reg.Pago_por, reg.Cobrado_por, reg.Descricao)
 	}
 }
 
 func (op *Options) GetReport(modifiers map[string]string) {
 	if len(modifiers) == 0 {
-		fmt.Println("Commando invalido, considere: " + op.Commands["get"] + " " + op.GetModifiers["--report"])
+		fmt.Println("Commando invalido, considere: " + op.Commands["get"] + " " + op.GetModifiers["--relatorio"])
 		return
 	}
 
-	err := executors.GetMonthlyReport(modifiers)
+	relatorios, err := executors.GetRelatorioMensal(modifiers)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	err = godotenv.Load()
-	if err != nil {
-		fmt.Println(err)
-		return
+	fmt.Println("urls dos relatórios mensais:")
+	for _, relatorio := range relatorios {
+		fmt.Printf("%s/%s: %s\n", relatorio.Mes, relatorio.Ano, relatorio.Url)
 	}
-
-	pdf_folder := os.Getenv("PDF_FOLDER")
-
-	fmt.Printf("Relatórios gerados em: %s\n", pdf_folder)
 }
 
 func (op *Options) GetTypeOfRegister(nucleoId string) {
 
-	typeOfRegister, err := executors.GetTypeOfRegister(nucleoId)
+	typeOfRegister, err := executors.GetTipoDeRegistro(nucleoId)
 	if err != nil {
 		fmt.Println(err)
 	}
 
 	for _, tReg := range typeOfRegister {
-		fmt.Printf("dados do tipo de registro:\n id: %d\nnome: %s\nnucleo: %s\ndescrição: %s\npartilha partidária: %f\n", tReg.Id, tReg.Name, tReg.Nucleo, tReg.Description, tReg.PartyShare)
+		fmt.Printf("dados do tipo de registro:\nid: %d\nnome: %s\nnucleo: %d\ndescrição: %s\npartilha partidária: %.2f\n", tReg.ID, tReg.Nome, tReg.Nucleo, tReg.Descricao, tReg.Parcela_partidaria)
 	}
-	}
+}
 
 func (op *Options) GetNucleo(modifiers map[string]string) {
 	if len(modifiers) == 0 {
@@ -138,7 +131,7 @@ func (op *Options) GetNucleo(modifiers map[string]string) {
 	}
 
 	for _, nucleo := range nucleos {
-		fmt.Printf("dados do nucleo:\n id: %d\nnome: %s\ncidade: %s\nestado: %s\ncredito: %f\ndia de pagamento: %s\n", nucleo.Id, nucleo.Name, nucleo.City, nucleo.State, nucleo.Credit, nucleo.Payday)
+		fmt.Printf("dados do nucleo:\nid: %d\nnome: %s\ncidade: %s\nestado: %s\nreserva: %.2f\ndia de pagamento: %s\n", nucleo.ID, nucleo.Nome, nucleo.Cidade, nucleo.Estado, nucleo.Reserva, nucleo.Dia_de_Pagamento)
 	}
 }
 
@@ -148,9 +141,8 @@ func (op *Options) GetPartido() {
 		fmt.Println(err)
 	}
 
-	fmt.Printf("dados do partido:\n id: %d\nnome: %s\ncredito: %f", partido.Id, partido.Name, partido.Credit)
+	fmt.Printf("dados do partido:\nid: %d\nnome: %s\nreserva: %.2f", partido.ID, partido.Nome, partido.Reserva)
 }
-
 
 func (op *Options) GetPayday(nucleoId string) {
 	payday, err := executors.GetPayday(nucleoId)
@@ -160,7 +152,3 @@ func (op *Options) GetPayday(nucleoId string) {
 
 	fmt.Printf("dia de pagamento: %s", payday)
 }
-
-
-
-

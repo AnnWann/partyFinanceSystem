@@ -12,13 +12,27 @@ import (
 )
 
 func main() {
-	godotenv.Load()
-	file := os.Getenv("DB_FILE")
-	database.GetDB().InitDB(file)
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("Error loading .env file")
+		fmt.Println("Exiting...")
+		os.Exit(1)
+	}
+
+	file := os.Getenv("DB_PATH")
+	err = database.GetDB().InitDB(file)
+	if err != nil {
+		fmt.Println("Error initializing database")
+		fmt.Println("Exiting...")
+		os.Exit(1)
+	}
+
+	terminal.InitVariableTable()
 	reader := bufio.NewReader(os.Stdin)
 	var input string
 
 	for {
+		print("\n\n>>> ")
 		input, _ = reader.ReadString('\n')
 		command, modifiers, arguments, err := parser.Parse(input)
 		if err != nil {
@@ -30,4 +44,3 @@ func main() {
 	}
 
 }
-

@@ -2,21 +2,22 @@ package terminal
 
 import (
 	"fmt"
+
 	"github.com/AnnWann/pstu_finance_system/src/executors"
 )
 
 func (op *Options) Update() {
 	if len(op.Arguments) == 0 {
-		fmt.Println("Atualizar o que? Use 'update --person' ou 'update --register'")
+		fmt.Println("Atualizar o que? Use:\n'update --pessoa: " + op.AddModifiers["--pessoa"] + "'\n" + "'update --tipoDeRegistro: " + op.AddModifiers["--tipoDeRegistro"] + "'\n" + "'update --diaDePagamento: " + op.AddModifiers["--diaDePagamento"] + "'")
 		return
 	}
 
 	switch op.Arguments[0] {
-	case "--person":
+	case "--pessoa":
 		op.UpdatePerson()
-	case "--typeOfRegister":
+	case "--tipoDeRegistro":
 		op.UpdateTypeOfRegister(op.Arguments[1:])
-	case "--payday":
+	case "--diaDePagamento":
 		op.UpdatePayday(op.Arguments[1:])
 	default:
 		fmt.Println("Modificador inválido")
@@ -33,7 +34,7 @@ func (op *Options) UpdatePerson() {
 	nucleo := op.Modifiers["--nucleo"]
 	payment := op.Modifiers["--payment"]
 
-	err := executors.UpdatePerson(id, nucleo, payment)
+	err := executors.UpdateMembro(id, nucleo, payment)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -50,7 +51,7 @@ func (op *Options) UpdateTypeOfRegister(args []string) {
 	id := args[0]
 	PartyShare := args[1]
 
-	err := executors.UpdateTypeOfRegister(id, PartyShare)
+	err := executors.UpdateTipoDeRegistro(id, PartyShare)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -74,6 +75,3 @@ func (op *Options) UpdatePayday(args []string) {
 
 	fmt.Println("Dia de pagamento atualizado com sucesso")
 }
-
-
-
