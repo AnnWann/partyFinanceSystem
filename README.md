@@ -7,7 +7,7 @@ It stores user's data and financial registers, builds monthly and yearly reports
 
 Pre-requisites: golang, make and sqlite3.
 
-Download source from: https://github.com/AnnWann/partyCoreFinantialSystem.
+Download source from: https://github.com/AnnWann/partyFinanceSystem.
 
 ## Usage
 
