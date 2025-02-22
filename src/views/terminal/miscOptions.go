@@ -27,6 +27,7 @@ func (op *Options) Help() {
 			}
 		}
 	}
+	fmt.Println("Use $<nome_variavel> para chamar uma variável. Exemplo: $nome\nColoque informações entre \"\" para enviar argumentos compostos. Ex: \"nome sobrenome\"")
 }
 func Exit() {
 	fmt.Println("Saindo...")

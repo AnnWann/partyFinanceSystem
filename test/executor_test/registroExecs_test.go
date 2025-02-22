@@ -50,11 +50,11 @@ func TestAddRegistroSucceding(t *testing.T) {
 	if register.Tipo != -100 {
 		t.Errorf("Expected type 1, got %d", register.Tipo)
 	}
-	if register.Pago_por != 4 {
-		t.Errorf("Expected Pago_por 4, got %d", register.Pago_por)
+	if register.Pagante != 4 {
+		t.Errorf("Expected Pago_por 4, got %d", register.Pagante)
 	}
-	if register.Cobrado_por != 5 {
-		t.Errorf("Expected Cobrado_por 5, got %d", register.Cobrado_por)
+	if register.Cobrante != 5 {
+		t.Errorf("Expected Cobrado_por 5, got %d", register.Cobrante)
 	}
 	if register.Quantidade != 1 {
 		t.Errorf("Expected amount 1, got %d", register.Quantidade)

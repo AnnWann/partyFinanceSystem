@@ -171,9 +171,9 @@ func TestDeleteNucleo(t *testing.T) {
 	file := "nucleo3/delete/test.db"
 	sqlCommands := []string{
 		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (1, 'nucleo1', 'cidade1', 'estado1', 0, '01');",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES (1, 'pessoa1', 1, 1, 100, 0);",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES (2, 'pessoa2', 1, 1, 200, 0);",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES (3, 'pessoa3', 1, 1, 300, 0);",
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES (1, 'pessoa1', 1, 1, 100, 0);",
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES (2, 'pessoa2', 1, 1, 200, 0);",
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES (3, 'pessoa3', 1, 1, 300, 0);",
 	}
 
 	db := test_helpers.BuildEnviroment(t, file, sqlCommands)

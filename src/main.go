@@ -31,6 +31,8 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 	var input string
 
+	nomePartido := os.Getenv("PARTIDO")
+	fmt.Printf("Sistema Financeiro do %s\nUse \"help\" para aprender como usá-lo", nomePartido)
 	for {
 		print("\n\n>>> ")
 		input, _ = reader.ReadString('\n')

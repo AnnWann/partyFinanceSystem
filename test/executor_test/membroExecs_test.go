@@ -24,18 +24,18 @@ func TestAddMembroSucceding(t *testing.T) {
 	defer os.RemoveAll("person1")
 
 	membrosEsperados := []struct {
-		Signature  int
-		Name       string
-		Nucleo     string
-		Designacao int
+		Signature int
+		Name      string
+		Nucleo    string
+		cargo     int
 	}{
-		{1, "person1", "1", database.GetDB().GetDesignacaoDB().GetDirigenteId()},
-		{2, "person2", "2", database.GetDB().GetDesignacaoDB().GetDirigenteId()},
-		{3, "person3", "3", database.GetDB().GetDesignacaoDB().GetDirigenteId()},
-		{4, "person4", "2", database.GetDB().GetDesignacaoDB().GetDirigenteFinanceiroId()},
-		{5, "person5", "1", database.GetDB().GetDesignacaoDB().GetDirigenteFinanceiroId()},
-		{6, "person6", "1", database.GetDB().GetDesignacaoDB().GetAspiranteId()},
-		{7, "person7", "1", database.GetDB().GetDesignacaoDB().GetAspiranteId()},
+		{1, "person1", "1", database.GetDB().GetCargoDB().GetDirigenteId()},
+		{2, "person2", "2", database.GetDB().GetCargoDB().GetDirigenteId()},
+		{3, "person3", "3", database.GetDB().GetCargoDB().GetDirigenteId()},
+		{4, "person4", "2", database.GetDB().GetCargoDB().GetDirigenteFinanceiroId()},
+		{5, "person5", "1", database.GetDB().GetCargoDB().GetDirigenteFinanceiroId()},
+		{6, "person6", "1", database.GetDB().GetCargoDB().GetAspiranteId()},
+		{7, "person7", "1", database.GetDB().GetCargoDB().GetAspiranteId()},
 	}
 
 	for _, membro := range membrosEsperados {
@@ -58,8 +58,8 @@ func TestAddMembroSucceding(t *testing.T) {
 			continue
 		}
 
-		if membroOBJ.Designacao != membro.Designacao {
-			t.Errorf("At signature %d, expected role %d, got %d", membro.Signature, membro.Designacao, membroOBJ.Designacao)
+		if membroOBJ.Cargo != membro.cargo {
+			t.Errorf("At signature %d, expected role %d, got %d", membro.Signature, membro.cargo, membroOBJ.Cargo)
 			continue
 		}
 	}
@@ -103,15 +103,15 @@ func TestGetMembro(t *testing.T) {
 		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (1, 'nucleo1', 'cidade1', 'estado1', 0, '01')",
 		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (2, 'nucleo2', 'cidade2', 'estado2', 0, '02')",
 		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (3, 'nucleo3', 'cidade3', 'estado3', 0, '03')",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES ('1', 'person1', 1, -300, 0, 0)",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES ('2', 'person2', 2, -300, 0, 0)",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES ('3', 'person3', 3, -300, 0, 0)",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES ('4', 'person4', 2, -400, 0, 0)",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES ('5', 'person5', 1, -400, 0, 0)",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES ('6', 'person6', 1, -100, 0, 0)",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES ('7', 'person7', 1, -200, 0, 0)",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES ('8', 'person8', 1, -200, 0, 0)",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES ('9', 'person9', 1, -100, 0, 0)"}
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('1', 'person1', 1, -300, 0, 0)",
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('2', 'person2', 2, -300, 0, 0)",
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('3', 'person3', 3, -300, 0, 0)",
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('4', 'person4', 2, -400, 0, 0)",
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('5', 'person5', 1, -400, 0, 0)",
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('6', 'person6', 1, -100, 0, 0)",
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('7', 'person7', 1, -200, 0, 0)",
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('8', 'person8', 1, -200, 0, 0)",
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('9', 'person9', 1, -100, 0, 0)"}
 
 	db := test_helpers.BuildEnviroment(t, file, sqlCommands)
 
@@ -153,8 +153,8 @@ func TestGetMembro(t *testing.T) {
 				if p.Nome != membro.Name {
 					t.Errorf("At signature %d, expected name %s, got %s", membro.Signature, membro.Name, p.Nome)
 				}
-				if p.Designacao != membro.Role {
-					t.Errorf("At signature %d, expected role %d, got %d", membro.Signature, membro.Role, p.Designacao)
+				if p.Cargo != membro.Role {
+					t.Errorf("At signature %d, expected role %d, got %d", membro.Signature, membro.Role, p.Cargo)
 				}
 				break
 			}
@@ -164,7 +164,7 @@ func TestGetMembro(t *testing.T) {
 		}
 	}
 
-	membrosDoNucleo1QueSaoMilitantes, err := executors.GetMembro(map[string]string{"--nucleo": "1", "--designacao": "-200"})
+	membrosDoNucleo1QueSaoMilitantes, err := executors.GetMembro(map[string]string{"--nucleo": "1", "--cargo": "-200"})
 	if err != nil {
 		t.Fatal("Could not get membros from nucleo 1 who are also militants")
 	}
@@ -182,8 +182,8 @@ func TestGetMembro(t *testing.T) {
 					if m.Nome != membro.Name {
 						t.Errorf("At signature %d, expected name %s, got %s", membro.Signature, membro.Name, m.Nome)
 					}
-					if m.Designacao != membro.Role {
-						t.Errorf("At signature %d, expected role %d, got %d", membro.Signature, membro.Role, m.Designacao)
+					if m.Cargo != membro.Role {
+						t.Errorf("At signature %d, expected role %d, got %d", membro.Signature, membro.Role, m.Cargo)
 					}
 					break
 				}
@@ -201,15 +201,15 @@ func TestUpdateMembro(t *testing.T) {
 		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (1, 'nucleo1', 'cidade1', 'estado1', 0, '01')",
 		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (2, 'nucleo2', 'cidade2', 'estado2', 0, '02')",
 		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (3, 'nucleo3', 'cidade3', 'estado3', 0, '03')",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES ('1', 'person1', 1, -300, 0, 0)",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES ('2', 'person2', 2, -300, 0, 0)",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES ('3', 'person3', 3, -300, 0, 0)",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES ('4', 'person4', 2, -400, 0, 0)",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES ('5', 'person5', 1, -400, 0, 0)",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES ('6', 'person6', 1, -100, 0, 0)",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES ('7', 'person7', 1, -200, 0, 0)",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES ('8', 'person8', 1, -200, 0, 0)",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES ('9', 'person9', 1, -100, 0, 0)"}
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('1', 'person1', 1, -300, 0, 0)",
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('2', 'person2', 2, -300, 0, 0)",
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('3', 'person3', 3, -300, 0, 0)",
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('4', 'person4', 2, -400, 0, 0)",
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('5', 'person5', 1, -400, 0, 0)",
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('6', 'person6', 1, -100, 0, 0)",
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('7', 'person7', 1, -200, 0, 0)",
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('8', 'person8', 1, -200, 0, 0)",
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('9', 'person9', 1, -100, 0, 0)"}
 
 	db := test_helpers.BuildEnviroment(t, file, sqlCommands)
 
@@ -221,7 +221,7 @@ func TestUpdateMembro(t *testing.T) {
 		Id                  int
 		Name                string
 		Nucleo              string
-		Designacao          int
+		Cargo               int
 		Contribuicao_mensal float64
 	}{
 		{'1', 1, "person1", "1", -300, 0},
@@ -282,8 +282,8 @@ func TestUpdateMembro(t *testing.T) {
 				if p.Nome != membro.Name {
 					t.Errorf("At signature %d, expected name %s, got %s", membro.Signature, membro.Name, p.Nome)
 				}
-				if p.Designacao != membro.Designacao {
-					t.Errorf("At signature %d, expected role %d, got %d", membro.Signature, membro.Designacao, p.Designacao)
+				if p.Cargo != membro.Cargo {
+					t.Errorf("At signature %d, expected role %d, got %d", membro.Signature, membro.Cargo, p.Cargo)
 				}
 				if p.Contribuicao_mensal != membro.Contribuicao_mensal {
 					t.Errorf("At signature %d, expected party contribution %f, got %f", membro.Signature, membro.Contribuicao_mensal, p.Contribuicao_mensal)
@@ -302,26 +302,26 @@ func TestPromoteMembro(t *testing.T) {
 	file := "person5/promote/test.db"
 	sqlCommands := []string{
 		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (1, 'nucleo1', 'cidade1', 'estado1', 0, '01')",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES ('1', 'person1', 1, -300, 0, 0)",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES ('2', 'person2', 1, -400, 0, 0)",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES ('3', 'person3', 1, -100, 0, 0)",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES ('4', 'person4', 1, -200, 0, 0)",
-		"INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES ('5', 'person5', 1, -100, 0, 0)"}
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('1', 'person1', 1, -300, 0, 0)",
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('2', 'person2', 1, -400, 0, 0)",
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('3', 'person3', 1, -100, 0, 0)",
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('4', 'person4', 1, -200, 0, 0)",
+		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('5', 'person5', 1, -100, 0, 0)"}
 
 	db := test_helpers.BuildEnviroment(t, file, sqlCommands)
 
 	defer db.Close()
 	defer os.RemoveAll("person5")
 
-	designicacaoDB := database.GetDB().GetDesignacaoDB()
+	designicacaoDB := database.GetDB().GetCargoDB()
 
 	expectedMembro := []struct {
 		Signature           int
 		Id                  int
 		Name                string
-		Designacao          int
+		cargo               int
 		DesignicacaoTentada int
-		DesignacaoNova      int
+		cargoNova           int
 	}{
 		{1, 1, "person1", designicacaoDB.GetDirigenteId(), 0, designicacaoDB.GetMilitanteId()},                                                             //demovido para militante
 		{2, 2, "person2", designicacaoDB.GetDirigenteFinanceiroId(), designicacaoDB.GetDirigenteFinanceiroId(), designicacaoDB.GetDirigenteFinanceiroId()}, //promovido para dirigente_financeiro, nada acontece
@@ -348,8 +348,8 @@ func TestPromoteMembro(t *testing.T) {
 			t.Errorf("At signature %d, could not get person", membro.Signature)
 		}
 
-		if membroOBJ.Designacao != membro.DesignacaoNova {
-			t.Errorf("At signature %d, expected role %d, got %d", membro.Signature, membro.DesignacaoNova, membroOBJ.Designacao)
+		if membroOBJ.Cargo != membro.cargoNova {
+			t.Errorf("At signature %d, expected role %d, got %d", membro.Signature, membro.cargoNova, membroOBJ.Cargo)
 		}
 	}
 
@@ -358,7 +358,7 @@ func TestPromoteMembro(t *testing.T) {
 		t.Errorf("At signature 1, could not get person")
 	}
 
-	if p1.Designacao != -200 {
-		t.Errorf("At signature 1, expected role -200, got %d", p1.Designacao)
+	if p1.Cargo != -200 {
+		t.Errorf("At signature 1, expected role -200, got %d", p1.Cargo)
 	}
 }

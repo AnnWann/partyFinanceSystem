@@ -23,7 +23,7 @@ func (db *MembroDB) InsertMembro(p models.Membro) (int, error) {
 	if err != nil {
 		return -1, err
 	}
-	_, err = db.Exec("INSERT INTO membros (id, nome, nucleo, designacao, contribuicao_mensal, credito) VALUES (?, ?, ?, ?, ?, ?)", id, p.Nome, p.Nucleo, p.Designacao, p.Contribuicao_mensal, p.Credito)
+	_, err = db.Exec("INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES (?, ?, ?, ?, ?, ?)", id, p.Nome, p.Nucleo, p.Cargo, p.Contribuicao_mensal, p.Credito)
 	if err != nil {
 		return -1, err
 	}
@@ -41,7 +41,7 @@ func (db *MembroDB) GetMembro() ([]models.Membro, error) {
 	var persons []models.Membro
 	for row.Next() {
 		var p models.Membro
-		err = row.Scan(&p.ID, &p.Nome, &p.Nucleo, &p.Designacao, &p.Contribuicao_mensal, &p.Credito)
+		err = row.Scan(&p.ID, &p.Nome, &p.Nucleo, &p.Cargo, &p.Contribuicao_mensal, &p.Credito)
 		if err != nil {
 			return []models.Membro{}, err
 		}
@@ -53,7 +53,7 @@ func (db *MembroDB) GetMembro() ([]models.Membro, error) {
 
 func (db *MembroDB) GetMembroById(id int) (models.Membro, error) {
 	var p models.Membro
-	err := db.QueryRow("SELECT * FROM membros WHERE id = ?", id).Scan(&p.ID, &p.Nome, &p.Nucleo, &p.Designacao, &p.Contribuicao_mensal, &p.Credito)
+	err := db.QueryRow("SELECT * FROM membros WHERE id = ?", id).Scan(&p.ID, &p.Nome, &p.Nucleo, &p.Cargo, &p.Contribuicao_mensal, &p.Credito)
 	if err != nil {
 		return models.Membro{}, nil
 	}
@@ -62,14 +62,14 @@ func (db *MembroDB) GetMembroById(id int) (models.Membro, error) {
 
 func (db *MembroDB) GetMembroByNome(nome string) (models.Membro, error) {
 	var p models.Membro
-	err := db.QueryRow("SELECT * FROM membros WHERE nome = ?", nome).Scan(&p.ID, &p.Nome, &p.Nucleo, &p.Designacao, &p.Contribuicao_mensal, &p.Credito)
+	err := db.QueryRow("SELECT * FROM membros WHERE nome = ?", nome).Scan(&p.ID, &p.Nome, &p.Nucleo, &p.Cargo, &p.Contribuicao_mensal, &p.Credito)
 
 	return p, err
 }
 
-func (db *MembroDB) GetMembroByDesignacao(designacao string) (models.Membro, error) {
+func (db *MembroDB) GetMembroByCargo(cargo string) (models.Membro, error) {
 	var p models.Membro
-	err := db.QueryRow("SELECT * FROM membros WHERE designacao = ?", designacao).Scan(&p.ID, &p.Nome, &p.Nucleo, &p.Designacao, &p.Contribuicao_mensal, &p.Credito)
+	err := db.QueryRow("SELECT * FROM membros WHERE cargo = ?", cargo).Scan(&p.ID, &p.Nome, &p.Nucleo, &p.Cargo, &p.Contribuicao_mensal, &p.Credito)
 
 	return p, err
 }
@@ -84,7 +84,7 @@ func (db *MembroDB) GetMembroByNucleo(nucleo int) ([]models.Membro, error) {
 	var persons []models.Membro
 	for row.Next() {
 		var p models.Membro
-		err = row.Scan(&p.ID, &p.Nome, &p.Nucleo, &p.Designacao, &p.Contribuicao_mensal, &p.Credito)
+		err = row.Scan(&p.ID, &p.Nome, &p.Nucleo, &p.Cargo, &p.Contribuicao_mensal, &p.Credito)
 		if err != nil {
 			return []models.Membro{}, err
 		}
@@ -114,8 +114,8 @@ func (db *MembroDB) DeleteMembro(id int) error {
 	return err
 }
 
-func (db *MembroDB) Promote(id int, designacao int) error {
-	_, err := db.Exec("UPDATE membros SET designacao = ? WHERE id = ?", designacao, id)
+func (db *MembroDB) Promote(id int, cargo int) error {
+	_, err := db.Exec("UPDATE membros SET cargo = ? WHERE id = ?", cargo, id)
 	return err
 }
 

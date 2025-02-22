@@ -55,7 +55,7 @@ func (db *DBWrapper) InitDB(file string) error {
 		"dia_de_pagamento TEXT NOT NULL,"+
 		"FOREIGN KEY (id) REFERENCES pessoas(id));"+
 
-		"CREATE TABLE IF NOT EXISTS designacao (id INTEGER NOT NULL PRIMARY KEY,"+
+		"CREATE TABLE IF NOT EXISTS cargos (id INTEGER NOT NULL PRIMARY KEY,"+
 		"titulo TEXT NOT NULL, "+
 		"nucleo INTEGER NOT NULL, "+
 		"descricao TEXT NOT NULL, "+
@@ -64,11 +64,11 @@ func (db *DBWrapper) InitDB(file string) error {
 		"CREATE TABLE IF NOT EXISTS membros (id TEXT NOT NULL PRIMARY KEY,"+
 		"nome TEXT NOT NULL, "+
 		"nucleo INTEGER NOT NULL, "+
-		"designacao INTEGER NOT NULL, "+
+		"cargo INTEGER NOT NULL, "+
 		"contribuicao_mensal FLOAT NOT NULL, "+
 		"credito FLOAT NOT NULL, "+
 		"FOREIGN KEY (nucleo) REFERENCES nucleos(id), "+
-		"FOREIGN KEY (designacao) REFERENCES designacao(id), "+
+		"FOREIGN KEY (cargo) REFERENCES cargos(id), "+
 		"FOREIGN KEY (id) REFERENCES pessoas(id));"+
 
 		"CREATE TABLE IF NOT EXISTS tipos_de_registro (id INTEGER NOT NULL PRIMARY KEY,"+
@@ -84,14 +84,14 @@ func (db *DBWrapper) InitDB(file string) error {
 		"ano TEXT NOT NULL, "+
 		"tipo INTEGER NOT NULL, "+
 		"nucleo INTEGER NOT NULL, "+
-		"pago_por TEXT NOT NULL, "+
-		"cobrado_por TEXT NOT NULL, "+
+		"pagante TEXT NOT NULL, "+
+		"cobrante TEXT NOT NULL, "+
 		"quantidade INTEGER NOT NULL, "+
 		"valor FLOAT NOT NULL, "+
 		"descricao TEXT NOT NULL, "+
 		"FOREIGN KEY (nucleo) REFERENCES nucleos(id), "+
-		"FOREIGN KEY (pago_por) REFERENCES pessoas(id), "+
-		"FOREIGN KEY (cobrado_por) REFERENCES pessoas(id), "+
+		"FOREIGN KEY (pagante) REFERENCES pessoas(id), "+
+		"FOREIGN KEY (cobrante) REFERENCES pessoas(id), "+
 		"FOREIGN KEY (tipo) REFERENCES tipo_de_registro(id)); "+
 
 		"CREATE TABLE IF NOT EXISTS relatorios_mensais (id INTEGER NOT NULL PRIMARY KEY,"+
@@ -116,10 +116,10 @@ func (db *DBWrapper) InitDB(file string) error {
 		"INSERT OR IGNORE INTO tipos_de_registro (id, nome, nucleo, descricao, partilha_partidaria) VALUES (-200, 'jornal', 2, 'Venda de produtos', 2.0); "+
 		"INSERT OR IGNORE INTO tipos_de_registro (id, nome, nucleo, descricao, partilha_partidaria) VALUES (-300, 'pagamento_partido', 2, 'pagamento do nucleo ao partido', 0.0); "+
 		"INSERT OR IGNORE INTO tipos_de_registro (id, nome, nucleo, descricao, partilha_partidaria) VALUES (-400, 'gasto', 2, 'Gasto do nucleo', 0.0); "+
-		"INSERT OR IGNORE INTO designacao (id, titulo, nucleo, descricao) VALUES (-100, 'aspirante', 2, 'Membro em treinamento'); "+
-		"INSERT OR IGNORE INTO designacao (id, titulo, nucleo, descricao) VALUES (-200, 'militante', 2, 'Membro efetivo'); "+
-		"INSERT OR IGNORE INTO designacao (id, titulo, nucleo, descricao) VALUES (-300, 'dirigente', 2, 'Membro com responsabilidades de liderança'); "+
-		"INSERT OR IGNORE INTO designacao (id, titulo, nucleo, descricao) VALUES (-400, 'dirigente_financeiro', 2, 'Membro com responsabilidades de liderança financeira'); "+
+		"INSERT OR IGNORE INTO cargos (id, titulo, nucleo, descricao) VALUES (-100, 'aspirante', 2, 'Membro em treinamento'); "+
+		"INSERT OR IGNORE INTO cargos (id, titulo, nucleo, descricao) VALUES (-200, 'militante', 2, 'Membro efetivo'); "+
+		"INSERT OR IGNORE INTO cargos (id, titulo, nucleo, descricao) VALUES (-300, 'dirigente', 2, 'Membro com responsabilidades de liderança'); "+
+		"INSERT OR IGNORE INTO cargos (id, titulo, nucleo, descricao) VALUES (-400, 'dirigente_financeiro', 2, 'Membro com responsabilidades de liderança financeira'); "+
 		"INSERT OR IGNORE INTO partido (id, nome, reserva) VALUES (1, ?, 0);", PARTIDO)
 	return err
 }

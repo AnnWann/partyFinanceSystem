@@ -65,7 +65,7 @@ func (op *Options) GetPerson(modifiers map[string]string) {
 	}
 
 	for _, person := range persons {
-		fmt.Printf("dados da pessoa:\nid: %d\nnome: %s\ndesignacao: %d\nnucleo: %d\ncontribuição mensal: %.2f\ncredito: %.2f\n", person.ID, person.Nome, person.Designacao, person.Nucleo, person.Contribuicao_mensal, person.Credito)
+		fmt.Printf("dados da pessoa:\nid: %d\nnome: %s\ncargo: %d\nnucleo: %d\ncontribuição mensal: %.2f\ncredito: %.2f\n", person.ID, person.Nome, person.Cargo, person.Nucleo, person.Contribuicao_mensal, person.Credito)
 	}
 }
 
@@ -77,7 +77,7 @@ func (op *Options) GetRegister(modifiers map[string]string) {
 	}
 
 	for _, reg := range register {
-		fmt.Printf("dados do registro:\nid: %d\ndia: %s\nmês: %s\nano: %s\nquantidade: %d\nvalor: %.2f\ntipo: %d\nnucleo: %d\npago_por: %d\ncobrado_por: %d\ndescrição: %s\n", reg.ID, reg.Dia, reg.Mes, reg.Ano, reg.Quantidade, reg.Valor, reg.Tipo, reg.Nucleo, reg.Pago_por, reg.Cobrado_por, reg.Descricao)
+		fmt.Printf("dados do registro:\nid: %d\ndia: %s\nmês: %s\nano: %s\nquantidade: %d\nvalor: %.2f\ntipo: %d\nnucleo: %d\npago_por: %d\ncobrado_por: %d\ndescrição: %s\n", reg.ID, reg.Dia, reg.Mes, reg.Ano, reg.Quantidade, reg.Valor, reg.Tipo, reg.Nucleo, reg.Pagante, reg.Cobrante, reg.Descricao)
 	}
 }
 

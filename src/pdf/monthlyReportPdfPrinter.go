@@ -36,9 +36,9 @@ func PrintPDFMonthlyReport(r models.Relatorio_mensal_complexo, path string) erro
 
 	for _, mr := range r.Pagamentos_de_membros.Registros {
 		date := mr.Dia + "/" + r.Mes + "/" + r.Ano
-		person := r.Membros[mr.Pago_por]
+		person := r.Membros[mr.Pagante]
 		drawCell(c, receitas_membros_table, date, normalFont, creator.CellHorizontalAlignmentCenter)
-		drawCell(c, receitas_membros_table, strconv.Itoa(mr.Pago_por), normalFont, creator.CellHorizontalAlignmentCenter)
+		drawCell(c, receitas_membros_table, strconv.Itoa(mr.Pagante), normalFont, creator.CellHorizontalAlignmentCenter)
 		drawCell(c, receitas_membros_table, person.Nome, normalFont, creator.CellHorizontalAlignmentCenter)
 		drawCell(c, receitas_membros_table, fmt.Sprintf("%.2f", mr.Valor), normalFont, creator.CellHorizontalAlignmentCenter)
 	}
@@ -94,7 +94,7 @@ func PrintPDFMonthlyReport(r models.Relatorio_mensal_complexo, path string) erro
 
 	for _, er := range r.Gastos.Registros {
 		date := er.Dia + "/" + r.Mes + "/" + r.Ano
-		person := r.Membros[er.Pago_por]
+		person := r.Membros[er.Pagante]
 		drawCell(c, despesas_table, date, normalFont, creator.CellHorizontalAlignmentCenter)
 		drawCell(c, despesas_table, er.Descricao, normalFont, creator.CellHorizontalAlignmentCenter)
 		drawCell(c, despesas_table, person.Nome, normalFont, creator.CellHorizontalAlignmentCenter)

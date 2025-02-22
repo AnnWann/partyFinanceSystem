@@ -25,18 +25,18 @@ func AddMembro(name string, nucleo string) (int, error) {
 		return 0, err
 	}
 
-	designacao := database.GetDB().GetDesignacaoDB().GetAspiranteId() //aspirante
+	designacao := database.GetDB().GetCargoDB().GetAspiranteId() //aspirante
 	if membersCount < 1 {
-		designacao = database.DB.GetDesignacaoDB().GetDirigenteId() //dirigente
+		designacao = database.DB.GetCargoDB().GetDirigenteId() //dirigente
 	} else if membersCount < 2 {
-		designacao = database.DB.GetDesignacaoDB().GetDirigenteFinanceiroId() //dirigente_financeiro
+		designacao = database.DB.GetCargoDB().GetDirigenteFinanceiroId() //dirigente_financeiro
 	}
 
 	person := models.Membro{
 		ID:                  -1,
 		Nome:                name,
 		Nucleo:              nucleoInt,
-		Designacao:          designacao,
+		Cargo:               designacao,
 		Credito:             0,
 		Contribuicao_mensal: 0,
 	}
@@ -66,24 +66,24 @@ func Promote(id string, designacao string) error {
 		return errors.New("designacao deve ser um número")
 	}
 
-	if !database.GetDB().GetDesignacaoDB().DesignacaoExists(designacaoInt) {
+	if !database.GetDB().GetCargoDB().CargoExists(designacaoInt) {
 		return errors.New("designacao não existe")
 	}
 
-	if designacaoInt == database.GetDB().GetDesignacaoDB().GetAspiranteId() {
+	if designacaoInt == database.GetDB().GetCargoDB().GetAspiranteId() {
 		return errors.New("não é possível promover um membro para aspirante")
 	}
 
 	db := database.GetDB().GetMembroDB()
-	if designacaoInt == database.GetDB().GetDesignacaoDB().GetDirigenteId() || designacaoInt == database.GetDB().GetDesignacaoDB().GetDirigenteFinanceiroId() {
+	if designacaoInt == database.GetDB().GetCargoDB().GetDirigenteId() || designacaoInt == database.GetDB().GetCargoDB().GetDirigenteFinanceiroId() {
 		person, err := db.GetMembroById(idInt)
 		if err != nil {
 			return err
 		}
-		if person.Designacao == database.GetDB().GetDesignacaoDB().GetAspiranteId() {
+		if person.Cargo == database.GetDB().GetCargoDB().GetAspiranteId() {
 			return errors.New("não é possível promover um aspirante para posição de liderança")
 		}
-		lPerson, err := db.GetMembroByDesignacao(designacao)
+		lPerson, err := db.GetMembroByCargo(designacao)
 		if err != nil {
 			return err
 		}
@@ -95,7 +95,7 @@ func Promote(id string, designacao string) error {
 			tx.Rollback()
 			return err
 		}
-		err = db.Promote(lPerson.ID, person.Designacao)
+		err = db.Promote(lPerson.ID, person.Cargo)
 		if err != nil {
 			tx.Rollback()
 			return err
@@ -188,12 +188,12 @@ func filterMembro(membro models.Membro, filterOptions map[string]string) bool {
 			}
 		case "--nome":
 			isValid = membro.Nome == value
-		case "--designacao":
+		case "--cargo":
 			role, err := strconv.Atoi(value)
 			if err != nil {
 				isValid = false
 			} else {
-				isValid = membro.Designacao == role
+				isValid = membro.Cargo == role
 			}
 		case "--nucleo":
 			nucleo, err := strconv.Atoi(value)

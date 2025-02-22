@@ -80,17 +80,17 @@ func AddRegistro(dia string, mes string, ano string, nucleo string, tipo_de_regi
 	id := registerDB.GetNextId()
 
 	register := models.Registro{
-		ID:          id,
-		Dia:         dia,
-		Mes:         mes,
-		Ano:         ano,
-		Nucleo:      nucleoInt,
-		Tipo:        type_of_registerInt,
-		Pago_por:    pago_porInt,
-		Cobrado_por: cobrado_porInt,
-		Quantidade:  amountINT,
-		Valor:       valueFLOAT,
-		Descricao:   descricao,
+		ID:         id,
+		Dia:        dia,
+		Mes:        mes,
+		Ano:        ano,
+		Nucleo:     nucleoInt,
+		Tipo:       type_of_registerInt,
+		Pagante:    pago_porInt,
+		Cobrante:   cobrado_porInt,
+		Quantidade: amountINT,
+		Valor:      valueFLOAT,
+		Descricao:  descricao,
 	}
 
 	err = database.GetDB().GetRegisterDB().InsertRegister(register)
@@ -147,19 +147,19 @@ func filterRegistro(register models.Registro, filterOptions map[string]string) b
 			} else {
 				isValid = register.Tipo == valueInt
 			}
-		case "--pago_por":
+		case "--pagante":
 			valueInt, err := strconv.Atoi(value)
 			if err != nil {
 				isValid = false
 			} else {
-				isValid = register.Pago_por == valueInt
+				isValid = register.Pagante == valueInt
 			}
-		case "--cobrado_por":
+		case "--cobrante":
 			valueInt, err := strconv.Atoi(value)
 			if err != nil {
 				isValid = false
 			} else {
-				isValid = register.Cobrado_por == valueInt
+				isValid = register.Cobrante == valueInt
 			}
 		}
 	}

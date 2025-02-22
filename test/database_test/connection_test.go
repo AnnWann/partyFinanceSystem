@@ -27,7 +27,7 @@ func TestConnection(t *testing.T) {
 		t.Fatal("Could not init database")
 	}
 
-	expectedTables := []string{"pessoas", "partido", "nucleos", "designacao", "membros", "tipos_de_registro", "registros", "relatorios_mensais"}
+	expectedTables := []string{"pessoas", "partido", "nucleos", "cargos", "membros", "tipos_de_registro", "registros", "relatorios_mensais"}
 
 	for _, table := range expectedTables {
 		if !test_helpers.TableExists(db, table) {
@@ -51,7 +51,7 @@ func TestConnectionWithManyDirectories(t *testing.T) {
 		t.Fatal("Could not init database")
 	}
 
-	expectedTables := []string{"pessoas", "partido", "nucleos", "designacao", "membros", "tipos_de_registro", "registros", "relatorios_mensais"}
+	expectedTables := []string{"pessoas", "partido", "nucleos", "cargos", "membros", "tipos_de_registro", "registros", "relatorios_mensais"}
 
 	for _, table := range expectedTables {
 		if !test_helpers.TableExists(db, table) {
@@ -81,7 +81,7 @@ func TestConnectionWithDirectoryCreated(t *testing.T) {
 		t.Fatal("Could not init database")
 	}
 
-	expectedTables := []string{"pessoas", "partido", "nucleos", "designacao", "membros", "tipos_de_registro", "registros", "relatorios_mensais"}
+	expectedTables := []string{"pessoas", "partido", "nucleos", "cargos", "membros", "tipos_de_registro", "registros", "relatorios_mensais"}
 
 	for _, table := range expectedTables {
 		if !test_helpers.TableExists(db, table) {
@@ -116,7 +116,7 @@ func TestConnectionWithFileCreated(t *testing.T) {
 		t.Fatal("Could not init database")
 	}
 
-	expectedTables := []string{"pessoas", "partido", "nucleos", "designacao", "membros", "tipos_de_registro", "registros", "relatorios_mensais"}
+	expectedTables := []string{"pessoas", "partido", "nucleos", "cargos", "membros", "tipos_de_registro", "registros", "relatorios_mensais"}
 
 	for _, table := range expectedTables {
 		if !test_helpers.TableExists(db, table) {
@@ -141,7 +141,7 @@ func TestReConnection(t *testing.T) {
 		t.Fatal("Could not init database")
 	}
 
-	expectedTables := []string{"pessoas", "partido", "nucleos", "designacao", "membros", "tipos_de_registro", "registros", "relatorios_mensais"}
+	expectedTables := []string{"pessoas", "partido", "nucleos", "cargos", "membros", "tipos_de_registro", "registros", "relatorios_mensais"}
 
 	db.Close()
 	err = db.InitDB(file)

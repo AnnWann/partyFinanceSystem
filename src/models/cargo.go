@@ -1,6 +1,6 @@
 package models
 
-type Designacao struct {
+type Cargo struct {
 	ID        int    `json:"id"`
 	Titulo    string `json:"titulo"`
 	Descricao string `json:"descricao"`
