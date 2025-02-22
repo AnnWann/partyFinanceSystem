@@ -36,8 +36,10 @@ func GetNucleo(modifiers map[string]string) ([]models.Nucleo, error) {
 		return nil, errors.New("erro ao obter os nucleos")
 	}
 
-	nucleos = filterNucleos(nucleos, modifiers)
-
+	if len(modifiers) > 0 {
+		nucleos = filterNucleos(nucleos, modifiers)
+	}
+	
 	if len(nucleos) == 0 {
 		return nil, errors.New("nenhum nucleo encontrado")
 	}

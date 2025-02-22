@@ -104,7 +104,15 @@ func GetRegistro(filterOptions map[string]string) ([]models.Registro, error) {
 		return nil, err
 	}
 
-	return filterRegistros(registros, filterOptions), nil
+	if len(filterOptions) > 0 {
+		registros = filterRegistros(registros, filterOptions)
+	}
+
+	if len(registros) == 0 {
+		return nil, errors.New("nenhum membro encontrado")
+	}
+
+	return registros, nil
 
 }
 

@@ -47,12 +47,20 @@ func AddMembro(name string, nucleo string) (int, error) {
 
 func GetMembro(filterOptions map[string]string) ([]models.Membro, error) {
 
-	persons, err := database.GetDB().GetMembroDB().GetMembro()
+	membros, err := database.GetDB().GetMembroDB().GetMembro()
 	if err != nil {
 		return nil, err
 	}
 
-	return filterMembros(persons, filterOptions), nil
+	if len(filterOptions) > 0 {
+		membros = filterMembros(membros, filterOptions)
+	}
+
+	if len(membros) == 0 {
+		return nil, errors.New("nenhum membro encontrado")
+	}
+
+	return membros, nil
 }
 
 func Promote(id string, designacao string) error {
