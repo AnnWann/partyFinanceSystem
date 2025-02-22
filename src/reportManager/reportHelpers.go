@@ -24,14 +24,14 @@ func getRegistrosPorTipo(registers []models.Registro, types []models.Tipo_de_reg
 	}
 	return registersByType
 }
-func applyMemberPayments(membersReport *models.SubRelatorio, members []models.Membro) map[int]models.Membro { 
+func applyMemberPayments(membersReport *models.SubRelatorio, members []models.Membro) map[int]models.Membro {
 	membersAfterPaying := members
 	totalPayments := float64(0)
 
 	for i, m := range membersAfterPaying { // para cada membro
 		monthPayment := float64(0)
 		for _, register := range membersReport.Registros { // para cada registro de pagamento
-			if register.Pago_por != m.ID {
+			if register.Pagante != m.ID {
 				continue
 			}
 			monthPayment = monthPayment + register.Valor*float64(register.Quantidade)

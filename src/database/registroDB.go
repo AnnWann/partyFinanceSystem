@@ -24,8 +24,8 @@ func (db *RegisterDB) GetNextId() int {
 }
 
 func (db *RegisterDB) InsertRegister(r models.Registro) error {
-	_, err := db.Exec("INSERT INTO registros (id, dia, mes, ano, tipo, nucleo, pago_por, cobrado_por, quantidade, valor, descricao) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-		r.ID, r.Dia, r.Mes, r.Ano, r.Tipo, r.Nucleo, r.Pago_por, r.Cobrado_por, r.Quantidade, r.Valor, r.Descricao)
+	_, err := db.Exec("INSERT INTO registros (id, dia, mes, ano, tipo, nucleo, pagante, cobrante, quantidade, valor, descricao) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		r.ID, r.Dia, r.Mes, r.Ano, r.Tipo, r.Nucleo, r.Pagante, r.Cobrante, r.Quantidade, r.Valor, r.Descricao)
 
 	return err
 }
@@ -40,7 +40,7 @@ func (db *RegisterDB) GetRegister() ([]models.Registro, error) {
 	var r []models.Registro
 	for rows.Next() {
 		var register models.Registro
-		err := rows.Scan(&register.ID, &register.Dia, &register.Mes, &register.Ano, &register.Tipo, &register.Nucleo, &register.Pago_por, &register.Cobrado_por, &register.Quantidade, &register.Valor, &register.Descricao)
+		err := rows.Scan(&register.ID, &register.Dia, &register.Mes, &register.Ano, &register.Tipo, &register.Nucleo, &register.Pagante, &register.Cobrante, &register.Quantidade, &register.Valor, &register.Descricao)
 		if err != nil {
 			return nil, err
 		}
@@ -52,7 +52,7 @@ func (db *RegisterDB) GetRegister() ([]models.Registro, error) {
 
 func (db *RegisterDB) GetRegisterById(id int) (models.Registro, error) {
 	var r models.Registro
-	err := db.QueryRow("SELECT * FROM registros WHERE id = ?", id).Scan(&r.ID, &r.Dia, &r.Mes, &r.Ano, &r.Tipo, &r.Nucleo, &r.Pago_por, &r.Cobrado_por, &r.Quantidade, &r.Valor, &r.Descricao)
+	err := db.QueryRow("SELECT * FROM registros WHERE id = ?", id).Scan(&r.ID, &r.Dia, &r.Mes, &r.Ano, &r.Tipo, &r.Nucleo, &r.Pagante, &r.Cobrante, &r.Quantidade, &r.Valor, &r.Descricao)
 	if err != nil {
 		return models.Registro{}, err
 	}
@@ -71,7 +71,7 @@ func (db *RegisterDB) GetRegisterByMonthAndYear(mes string, ano string) ([]model
 	var registers []models.Registro
 	for rows.Next() {
 		var r models.Registro
-		err := rows.Scan(&r.ID, &r.Dia, &r.Mes, &r.Ano, &r.Tipo, &r.Nucleo, &r.Pago_por, &r.Cobrado_por, &r.Quantidade, &r.Valor, &r.Descricao)
+		err := rows.Scan(&r.ID, &r.Dia, &r.Mes, &r.Ano, &r.Tipo, &r.Nucleo, &r.Pagante, &r.Cobrante, &r.Quantidade, &r.Valor, &r.Descricao)
 		if err != nil {
 			return nil, err
 		}
@@ -91,7 +91,7 @@ func (db *RegisterDB) GetRegistersByYear(ano string) ([]models.Registro, error) 
 	var registers []models.Registro
 	for rows.Next() {
 		var r models.Registro
-		err := rows.Scan(&r.ID, &r.Dia, &r.Mes, &r.Ano, &r.Tipo, &r.Pago_por, &r.Cobrado_por, &r.Quantidade, &r.Valor, &r.Descricao)
+		err := rows.Scan(&r.ID, &r.Dia, &r.Mes, &r.Ano, &r.Tipo, &r.Pagante, &r.Cobrante, &r.Quantidade, &r.Valor, &r.Descricao)
 		if err != nil {
 			return nil, err
 		}

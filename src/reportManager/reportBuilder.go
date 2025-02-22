@@ -94,17 +94,17 @@ func BuildRelatorioMensal(month string, year string, nucleoId int) (models.Relat
 	registro_partilha_partidaria := db.GetRegisterDB().GetNextId()
 
 	partyDebtsRegister := models.Registro{
-		ID:          registro_partilha_partidaria,
-		Dia:         nucleo.Dia_de_Pagamento,
-		Mes:         month,
-		Ano:         year,
-		Nucleo:      nucleoId,
-		Pago_por:    nucleoId,
-		Cobrado_por: db.GetPartidoDB().GetPartidoId(),
-		Tipo:        database.GetDB().GetTiposDeRegistroDB().GetPagamentoPartido(),
-		Descricao:   "Pagamento ao partido",
-		Valor:       partilha_partidaria,
-		Quantidade:  1,
+		ID:         registro_partilha_partidaria,
+		Dia:        nucleo.Dia_de_Pagamento,
+		Mes:        month,
+		Ano:        year,
+		Nucleo:     nucleoId,
+		Pagante:    nucleoId,
+		Cobrante:   db.GetPartidoDB().GetPartidoId(),
+		Tipo:       database.GetDB().GetTiposDeRegistroDB().GetPagamentoPartido(),
+		Descricao:  "Pagamento ao partido",
+		Valor:      partilha_partidaria,
+		Quantidade: 1,
 	}
 
 	return report, partyDebtsRegister, err

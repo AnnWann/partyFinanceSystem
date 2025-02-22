@@ -14,19 +14,19 @@ var commands = map[string]string{
 
 var addModifiers = map[string]string{
 	"--membro":         "Adicionar uma membro. Args: Nome, NucleoId",
-	"--registro":       "Adicionar um registro. Args: Dia, Mês, Ano, Nucleo, Tipo, Doador, Receptor, Valor, Descrição",
+	"--registro":       "Adicionar um registro. Args: Dia, Mês, Ano, Nucleo, Tipo, Pagante, Cobrante, Quantidade, Valor, Descrição",
 	"--tipoDeRegistro": "Adicionar um tipo de registro. Args: Nome, Nucleo, Descrição, PartilhaPartidária",
 	"--nucleo":         "Adicionar um nucleo. Args: Nome, Cidade, Estado, Dia de pagamento",
 	"--relatorio":      "Gerar um relatório. Args: NucleoId, Month, Year"}
 
 var getModifiers = map[string]string{
-	"--membro":         "Obter membros. Use --id, --name, --role, --nucleo para filtrar a busca ou sem argumentos para obter todas as pessoas",
-	"--registro":       "Obter registros. Use --nucleo --day, --month, --year, --type, --giver, --receiver para filtrar",
+	"--membro":         "Obter membros. Use --id, --nome, --cargo, --nucleo para filtrar a busca ou sem argumentos para obter todas as pessoas",
+	"--registro":       "Obter registros. Use --nucleo --dia, --mes, --ano, --tipo, --pagante, --cobrante para filtrar",
 	"--diaDePagamento": "Obter o dia de pagamento. Args: idNucleo",
 	"--tipoDeRegistro": "Obter tipos de registro. Args: idNucleo",
-	"--nucleo":         "Obter nucleos. Use --id, --name, --city, --state para filtrar",
+	"--nucleo":         "Obter nucleos. Use --id, --nome, --cidade, --estado para filtrar",
 	"--partido":        "Obter o partido.",
-	"--relatorio":      "Obter relatórios. Use --nucleo, --month, --year para filtrar e --pdf para obter arquivo pdf"}
+	"--relatorio":      "Obter relatórios. Use --nucleo, --mes, --ano para filtrar e --pdf para obter arquivo pdf"}
 
 var updateModifiers = map[string]string{
 	"--diaDePagamento": "Atualizar o dia de pagamento de um nucleo. Args: Id Nucleo, Dia",
