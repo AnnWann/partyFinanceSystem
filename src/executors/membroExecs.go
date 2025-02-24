@@ -213,14 +213,5 @@ func filterMembro(membro models.Membro, filterOptions map[string]string) bool {
 		}
 		allValidValues = append(allValidValues, isValid)
 	}
-	return allTrue(allValidValues)
-}
-
-func allTrue(bools []bool) bool {
-	for _, b := range bools {
-		if !b {
-			return false
-		}
-	}
-	return true
+	return AllTrue(allValidValues)
 }

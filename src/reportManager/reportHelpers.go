@@ -58,20 +58,6 @@ func applyMemberPayments(membersReport *models.SubRelatorio, members []models.Me
 	return membersAfterPayingMap
 }
 
-func getSales(registers []models.Registro, saleTypeId int) ([]models.Registro, float64) {
-	sales := []models.Registro{}
-	totalSales := float64(0)
-
-	for _, register := range registers {
-		if register.Tipo == saleTypeId {
-			sales = append(sales, register)
-			totalSales = totalSales + register.Valor*float64(register.Quantidade)
-		}
-	}
-
-	return sales, totalSales
-}
-
 func extractRegistrosEspecificosDeNucleo(r RegistrosPorTipo) models.Registros_Especificos_Nucleo {
 	especificos := models.Registros_Especificos_Nucleo{}
 	especificos.Tipos = make(map[int]models.SubRelatorio)

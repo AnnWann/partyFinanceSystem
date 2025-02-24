@@ -92,7 +92,7 @@ func GetRelatorioMensal(filterOptions map[string]string) ([]RM_get_response, err
 		return nil, errors.New("nenhum membro encontrado")
 	}
 	var relatoriosPaths []RM_get_response
-	
+
 	for _, r := range relatorios {
 		response := RM_get_response{r.Mes, r.Ano, r.Link_Arquivo}
 		relatoriosPaths = append(relatoriosPaths, response)
@@ -117,8 +117,9 @@ func filterRelatoriosMensal(rm []models.Relatorio_mensal, filterOptions map[stri
 }
 
 func filterRelatorioMensal(r models.Relatorio_mensal, filterOptions map[string]string) bool {
-	isValid := false
+	var allValidValues = []bool{}
 	for key, value := range filterOptions {
+		isValid := false
 		switch key {
 		case "--nucleo":
 			nucleo, err := strconv.Atoi(value)
@@ -132,8 +133,9 @@ func filterRelatorioMensal(r models.Relatorio_mensal, filterOptions map[string]s
 		case "--ano":
 			isValid = r.Ano == value
 		}
+		allValidValues = append(allValidValues, isValid)
 	}
-	return isValid
+	return AllTrue(allValidValues)
 }
 
 func GetPayday(nucleo string) (string, error) {

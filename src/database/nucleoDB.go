@@ -22,7 +22,7 @@ func (db *NucleoDB) InsertNucleo(nucleo models.Nucleo) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	_, err = db.Exec("INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (?, ?, ?, ?, ?, ?)", id, nucleo.Nome, nucleo.Cidade, nucleo.Estado, nucleo.Reserva, nucleo.Dia_de_Pagamento)
+	_, err = db.Exec("INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento, administrador) VALUES (?, ?, ?, ?, ?, ?, ?)", id, nucleo.Nome, nucleo.Cidade, nucleo.Estado, nucleo.Reserva, nucleo.Dia_de_Pagamento, nucleo.Administrador)
 	if err != nil {
 		return 0, err
 	}
@@ -40,7 +40,7 @@ func (db *NucleoDB) GetNucleo() ([]models.Nucleo, error) {
 	nucleos := []models.Nucleo{}
 	for rows.Next() {
 		var nucleo models.Nucleo
-		err = rows.Scan(&nucleo.ID, &nucleo.Nome, &nucleo.Cidade, &nucleo.Estado, &nucleo.Reserva, &nucleo.Dia_de_Pagamento)
+		err = rows.Scan(&nucleo.ID, &nucleo.Nome, &nucleo.Cidade, &nucleo.Estado, &nucleo.Reserva, &nucleo.Dia_de_Pagamento, &nucleo.Administrador)
 		if err != nil {
 			return nil, err
 		}
@@ -60,7 +60,7 @@ func (db *NucleoDB) GetNucleoById(id int) (models.Nucleo, error) {
 
 	var nucleo models.Nucleo
 	for rows.Next() {
-		err = rows.Scan(&nucleo.ID, &nucleo.Nome, &nucleo.Cidade, &nucleo.Estado, &nucleo.Reserva, &nucleo.Dia_de_Pagamento)
+		err = rows.Scan(&nucleo.ID, &nucleo.Nome, &nucleo.Cidade, &nucleo.Estado, &nucleo.Reserva, &nucleo.Dia_de_Pagamento, &nucleo.Administrador)
 		if err != nil {
 			return models.Nucleo{}, err
 		}

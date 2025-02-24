@@ -40,4 +40,5 @@ func InitVariableTable() {
 	variableTable["jornal"] = "-200"
 	variableTable["pagamento_partido"] = "-300"
 	variableTable["gasto"] = "-400"
+	variableTable["abatimento"] = "-500"
 }

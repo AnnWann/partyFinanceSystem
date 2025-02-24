@@ -63,7 +63,7 @@ func (db *TiposDeRegistroDB) GetTipoPorNucleo(nucleoId int) ([]models.Tipo_de_re
 		return nil, err
 	}
 
-	pagamentoPartidoId := db.GetPagamentoPartido()
+	pagamentoPartidoId := db.GetPagamentoAdministrador()
 	for _, t := range generalTypes {
 		if t.ID == pagamentoPartidoId {
 			continue
@@ -119,12 +119,16 @@ func (db *TiposDeRegistroDB) GetJornalId() int {
 	return -200
 }
 
-func (db *TiposDeRegistroDB) GetPagamentoPartido() int {
+func (db *TiposDeRegistroDB) GetPagamentoAdministrador() int {
 	return -300
 }
 
 func (db *TiposDeRegistroDB) GetGastosId() int {
 	return -400
+}
+
+func (db *TiposDeRegistroDB) GetAbatimentosId() int {
+	return -500
 }
 
 func (db *TiposDeRegistroDB) CountTipos() (int, error) {

@@ -53,6 +53,8 @@ func (db *DBWrapper) InitDB(file string) error {
 		"estado TEXT NOT NULL, "+
 		"reserva FLOAT NOT NULL,"+
 		"dia_de_pagamento TEXT NOT NULL,"+
+		"administrador INTEGER NOT NULL,"+
+		"FOREIGN KEY (administrador) REFERENCES pessoas(id),"+
 		"FOREIGN KEY (id) REFERENCES pessoas(id));"+
 
 		"CREATE TABLE IF NOT EXISTS cargos (id INTEGER NOT NULL PRIMARY KEY,"+
@@ -114,8 +116,9 @@ func (db *DBWrapper) InitDB(file string) error {
 		"INSERT OR IGNORE INTO pessoas (id, classe) VALUES (2, 'nucleo_geral');"+
 		"INSERT OR IGNORE INTO tipos_de_registro (id, nome, nucleo, descricao, partilha_partidaria) VALUES (-100, 'contribuicao', 2, 'Contribuição mensal do militante', 0.0); "+
 		"INSERT OR IGNORE INTO tipos_de_registro (id, nome, nucleo, descricao, partilha_partidaria) VALUES (-200, 'jornal', 2, 'Venda de produtos', 2.0); "+
-		"INSERT OR IGNORE INTO tipos_de_registro (id, nome, nucleo, descricao, partilha_partidaria) VALUES (-300, 'pagamento_partido', 2, 'pagamento do nucleo ao partido', 0.0); "+
+		"INSERT OR IGNORE INTO tipos_de_registro (id, nome, nucleo, descricao, partilha_partidaria) VALUES (-300, 'pagamento_partido', 2, 'pagamento do nucleo ao seu administrador', 0.0); "+
 		"INSERT OR IGNORE INTO tipos_de_registro (id, nome, nucleo, descricao, partilha_partidaria) VALUES (-400, 'gasto', 2, 'Gasto do nucleo', 0.0); "+
+		"INSERT OR IGNORE INTO tipos_de_registro (id, nome, nucleo, descricao, partilha_partidaria) VALUES (-500, 'abatimento', 2, 'Abatimento do nucleo', 0.0); "+
 		"INSERT OR IGNORE INTO cargos (id, titulo, nucleo, descricao) VALUES (-100, 'aspirante', 2, 'Membro em treinamento'); "+
 		"INSERT OR IGNORE INTO cargos (id, titulo, nucleo, descricao) VALUES (-200, 'militante', 2, 'Membro efetivo'); "+
 		"INSERT OR IGNORE INTO cargos (id, titulo, nucleo, descricao) VALUES (-300, 'dirigente', 2, 'Membro com responsabilidades de liderança'); "+

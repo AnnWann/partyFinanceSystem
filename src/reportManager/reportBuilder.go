@@ -65,7 +65,7 @@ func BuildRelatorioMensal(month string, year string, nucleoId int) (models.Relat
 	reportId := strconv.Itoa(nucleoId) + "-" + month + "/" + year
 
 	total_ganho := registrosEspecificos.Total + registrosPorTipo[contribuicaoId].Total + registrosPorTipo[jornalId].Total
-	total_liquido := total_ganho - registrosPorTipo[gastosId].Total
+	total_liquido := total_ganho + registrosPorTipo[db.GetTiposDeRegistroDB().GetAbatimentosId()].Total - registrosPorTipo[gastosId].Total
 
 	partilha_partidaria_especifica := calcPartilhaPartidariaEspecifica(tiposDeRegistros, registrosEspecificos.Tipos)
 	partilha_partidaria := partilha_partidaria_especifica + registrosPorTipo[contribuicaoId].Total + float64(len(registrosPorTipo[jornalId].Registros))*parcela_partidaria_jornal
@@ -82,6 +82,7 @@ func BuildRelatorioMensal(month string, year string, nucleoId int) (models.Relat
 		Partido:                 partido,
 		Pagamentos_de_membros:   registrosPorTipo[contribuicaoId],
 		Vendas_jornal:           registrosPorTipo[db.GetTiposDeRegistroDB().GetJornalId()],
+		Abatimentos:             registrosPorTipo[db.GetTiposDeRegistroDB().GetAbatimentosId()],
 		Gastos:                  registrosPorTipo[gastosId],
 		Registros_especificos:   registrosEspecificos,
 		Total_Ganho:             total_ganho,
@@ -100,9 +101,9 @@ func BuildRelatorioMensal(month string, year string, nucleoId int) (models.Relat
 		Ano:        year,
 		Nucleo:     nucleoId,
 		Pagante:    nucleoId,
-		Cobrante:   db.GetPartidoDB().GetPartidoId(),
-		Tipo:       database.GetDB().GetTiposDeRegistroDB().GetPagamentoPartido(),
-		Descricao:  "Pagamento ao partido",
+		Cobrante:   nucleo.Administrador,
+		Tipo:       database.GetDB().GetTiposDeRegistroDB().GetPagamentoAdministrador(),
+		Descricao:  "Pagamento ao administrador",
 		Valor:      partilha_partidaria,
 		Quantidade: 1,
 	}

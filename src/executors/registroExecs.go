@@ -132,8 +132,9 @@ func filterRegistros(registros []models.Registro, filterOptions map[string]strin
 }
 
 func filterRegistro(register models.Registro, filterOptions map[string]string) bool {
-	isValid := false
+	var allValidValues = []bool{}
 	for key, value := range filterOptions {
+		isValid := false
 		switch key {
 		case "--nucleo":
 			valueInt, err := strconv.Atoi(value)
@@ -170,8 +171,9 @@ func filterRegistro(register models.Registro, filterOptions map[string]string) b
 				isValid = register.Cobrante == valueInt
 			}
 		}
+		allValidValues = append(allValidValues, isValid)
 	}
-	return isValid
+	return AllTrue(allValidValues)
 }
 
 func AddTipoDeRegistro(nome string, nucleo string, descricao string, partilha_partidaria string) error {
