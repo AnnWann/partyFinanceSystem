@@ -16,7 +16,7 @@ var addModifiers = map[string]string{
 	"--membro":         "Adicionar uma membro. Args: Nome, NucleoId",
 	"--registro":       "Adicionar um registro. Args: Dia, Mês, Ano, Nucleo, Tipo, Pagante, Cobrante, Quantidade, Valor, Descrição",
 	"--tipoDeRegistro": "Adicionar um tipo de registro. Args: Nome, Nucleo, Descrição, PartilhaPartidária",
-	"--nucleo":         "Adicionar um nucleo. Args: Nome, Cidade, Estado, Dia de pagamento",
+	"--nucleo":         "Adicionar um nucleo. Args: Nome, Cidade, Estado, Dia de pagamento, Administrador",
 	"--relatorio":      "Gerar um relatório. Args: NucleoId, Month, Year"}
 
 var getModifiers = map[string]string{
@@ -24,7 +24,7 @@ var getModifiers = map[string]string{
 	"--registro":       "Obter registros. Use --nucleo --dia, --mes, --ano, --tipo, --pagante, --cobrante para filtrar",
 	"--diaDePagamento": "Obter o dia de pagamento. Args: idNucleo",
 	"--tipoDeRegistro": "Obter tipos de registro. Args: idNucleo",
-	"--nucleo":         "Obter nucleos. Use --id, --nome, --cidade, --estado para filtrar",
+	"--nucleo":         "Obter nucleos. Use --id, --nome, --cidade, --estado --administrador para filtrar",
 	"--partido":        "Obter o partido.",
 	"--relatorio":      "Obter relatórios. Use --nucleo, --mes, --ano para filtrar e --pdf para obter arquivo pdf"}
 

@@ -8,7 +8,20 @@ import (
 	"github.com/AnnWann/pstu_finance_system/src/models"
 )
 
-func AddNucleo(nome, cidade, estado, payday string) (int, error) {
+func AddNucleo(nome, cidade, estado, payday, administrador string) (int, error) {
+	administradorInt, err := strconv.Atoi(administrador)
+	if err != nil {
+		return 0, errors.New("id do administrador inválido")
+	}
+
+	administradorOBJ, err := database.GetDB().GetPessoasDB().GetPessoa(administradorInt)
+	if err != nil {
+		return 0, errors.New("administrador não encontrado")
+	}
+	if administradorOBJ.Classe != "nucleo" && administradorOBJ.Classe != "partido" {
+		return 0, errors.New("administrador inválido")
+	}
+
 	db := database.GetDB().GetNucleoDB()
 
 	nucleo := models.Nucleo{
@@ -18,6 +31,7 @@ func AddNucleo(nome, cidade, estado, payday string) (int, error) {
 		Estado:           estado,
 		Reserva:          0,
 		Dia_de_Pagamento: payday,
+		Administrador:    administradorInt,
 	}
 
 	id, err := db.InsertNucleo(nucleo)
@@ -36,7 +50,9 @@ func GetNucleo(modifiers map[string]string) ([]models.Nucleo, error) {
 		return nil, errors.New("erro ao obter os nucleos")
 	}
 
-	nucleos = filterNucleos(nucleos, modifiers)
+	if len(modifiers) > 0 {
+		nucleos = filterNucleos(nucleos, modifiers)
+	}
 
 	if len(nucleos) == 0 {
 		return nil, errors.New("nenhum nucleo encontrado")
@@ -101,24 +117,34 @@ func filterNucleos(nucleos []models.Nucleo, filterOptions map[string]string) []m
 }
 
 func filterNucleo(nucleo models.Nucleo, filterOptions map[string]string) bool {
-	isValid := false
+	var allValidValues = []bool{}
 	for key, value := range filterOptions {
+		isValid := false
 		switch key {
 		case "--id":
 			id, err := strconv.Atoi(value)
 			if err != nil {
-				return false
+				isValid = false
+			} else {
+				isValid = nucleo.ID == id
 			}
-			isValid = nucleo.ID == id
 		case "--nome":
 			isValid = nucleo.Nome == value
 		case "--cidade":
 			isValid = nucleo.Cidade == value
 		case "--estado":
 			isValid = nucleo.Estado == value
+		case "--administrador":
+			id, err := strconv.Atoi(value)
+			if err != nil {
+				isValid = false
+			} else {
+				isValid = nucleo.Administrador == id
+			}
 		}
+		allValidValues = append(allValidValues, isValid)
 	}
-	return isValid
+	return AllTrue(allValidValues)
 }
 
 func UpdatePayday(id, payday string) error {

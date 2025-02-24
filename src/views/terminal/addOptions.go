@@ -108,7 +108,8 @@ func (op *Options) AddNucleo(Arguments []string) {
 	cidade := Arguments[1]
 	estado := Arguments[2]
 	payday := Arguments[3]
-	id, err := executors.AddNucleo(nome, cidade, estado, payday)
+	administrador := Arguments[4]
+	id, err := executors.AddNucleo(nome, cidade, estado, payday, administrador)
 	if err != nil {
 		fmt.Println(err)
 		return

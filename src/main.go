@@ -22,7 +22,7 @@ func main() {
 	file := os.Getenv("DB_PATH")
 	err = database.GetDB().InitDB(file)
 	if err != nil {
-		fmt.Println("Error initializing database")
+		fmt.Println("Error initializing database: ", err)
 		fmt.Println("Exiting...")
 		os.Exit(1)
 	}

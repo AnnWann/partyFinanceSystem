@@ -2,6 +2,8 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
+	"strings"
 
 	"github.com/AnnWann/pstu_finance_system/src/models"
 )
@@ -44,7 +46,9 @@ func (rDb *RelatorioMensalDB) InsertRelatorio(r models.Relatorio_mensal_complexo
 		membersIds = append(membersIds, value.ID)
 	}
 
-	sizeRegister := len(r.Pagamentos_de_membros.Registros) + len(r.Gastos.Registros)
+	membersIdsStr := strings.Trim(strings.Join(strings.Fields(fmt.Sprint(membersIds)), ", "), "[]")
+
+	sizeRegister := len(r.Pagamentos_de_membros.Registros) + len(r.Gastos.Registros) + len(r.Registros_especificos.Tipos)
 	for _, salesType := range r.Registros_especificos.Tipos {
 		sizeRegister += len(salesType.Registros)
 	}
@@ -64,11 +68,13 @@ func (rDb *RelatorioMensalDB) InsertRelatorio(r models.Relatorio_mensal_complexo
 		}
 	}
 
+	registerIdsStr := strings.Trim(strings.Join(strings.Fields(fmt.Sprint(registerIds)), ", "), "[]")
+
 	_, err = rDb.Exec(
 		"INSERT INTO"+
 			"relatorios_mensais (id, mes, ano, nucleo, membros, registros, total_ganho, total_liquido, pagamento_partido, lucro_nucleo, link_arquivo)"+
 			"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-		r.ID, r.Mes, r.Ano, r.Nucleo.ID, membersIds, registerIds, r.Total_Ganho,
+		r.ID, r.Mes, r.Ano, r.Nucleo.ID, membersIdsStr, registerIdsStr, r.Total_Ganho,
 		r.Total_Liquido, r.Pagamento_Partidario, r.Lucro_Nucleo, r.Link_Arquivo)
 
 	return err

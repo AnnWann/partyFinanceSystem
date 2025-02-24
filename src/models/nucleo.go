@@ -7,4 +7,5 @@ type Nucleo struct {
 	Estado           string  `json:"estado"`
 	Reserva          float64 `json:"reserva"`
 	Dia_de_Pagamento string  `json:"dia_de_pagamento"`
+	Administrador    int     `json:"administrador"`
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"reflect"
+	"strconv"
 	"testing"
 
 	"github.com/AnnWann/pstu_finance_system/src/database"
@@ -27,6 +28,7 @@ func TestAddNucleo(t *testing.T) {
 			Estado:           "estado1",
 			Reserva:          0,
 			Dia_de_Pagamento: "01",
+			Administrador:    1,
 		},
 		{
 			ID:               4,
@@ -35,6 +37,7 @@ func TestAddNucleo(t *testing.T) {
 			Estado:           "estado2",
 			Reserva:          0,
 			Dia_de_Pagamento: "02",
+			Administrador:    1,
 		},
 		{
 			ID:               5,
@@ -43,11 +46,12 @@ func TestAddNucleo(t *testing.T) {
 			Estado:           "estado3",
 			Reserva:          0,
 			Dia_de_Pagamento: "03",
+			Administrador:    1,
 		},
 	}
 
 	for _, nucleo := range expectedNucleos {
-		id, err := executors.AddNucleo(nucleo.Nome, nucleo.Cidade, nucleo.Estado, nucleo.Dia_de_Pagamento)
+		id, err := executors.AddNucleo(nucleo.Nome, nucleo.Cidade, nucleo.Estado, nucleo.Dia_de_Pagamento, strconv.Itoa(nucleo.Administrador))
 		if err != nil {
 			t.Fatal(err)
 		}

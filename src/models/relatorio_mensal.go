@@ -11,6 +11,7 @@ type Relatorio_mensal_complexo struct {
 	Pagamentos_de_membros   SubRelatorio                 `json:"pagamentos_de_membros"`
 	Vendas_jornal           SubRelatorio                 `json:"vendas_jornal"`
 	Gastos                  SubRelatorio                 `json:"gastos"`
+	Abatimentos             SubRelatorio                 `json:"abatimentos"`
 	Registros_especificos   Registros_Especificos_Nucleo `json:"registros_especificos"`
 	Total_Ganho             float64                      `json:"total_ganho"`
 	Total_Liquido           float64                      `json:"total_liquido"`

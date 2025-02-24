@@ -74,10 +74,11 @@ func (op *Options) GetRegister(modifiers map[string]string) {
 	register, err := executors.GetRegistro(modifiers)
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
 
 	for _, reg := range register {
-		fmt.Printf("dados do registro:\nid: %d\ndia: %s\nmês: %s\nano: %s\nquantidade: %d\nvalor: %.2f\ntipo: %d\nnucleo: %d\npago_por: %d\ncobrado_por: %d\ndescrição: %s\n", reg.ID, reg.Dia, reg.Mes, reg.Ano, reg.Quantidade, reg.Valor, reg.Tipo, reg.Nucleo, reg.Pagante, reg.Cobrante, reg.Descricao)
+		fmt.Printf("dados do registro:\nid: %d\ndia: %s\nmês: %s\nano: %s\nquantidade: %d\nvalor: %.2f\ntipo: %d\nnucleo: %d\npagante: %d\ncobrante: %d\ndescrição: %s\n", reg.ID, reg.Dia, reg.Mes, reg.Ano, reg.Quantidade, reg.Valor, reg.Tipo, reg.Nucleo, reg.Pagante, reg.Cobrante, reg.Descricao)
 	}
 }
 

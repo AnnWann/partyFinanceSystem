@@ -106,6 +106,24 @@ func PrintPDFMonthlyReport(r models.Relatorio_mensal_complexo, path string) erro
 
 	despesas.Add(despesas_table)
 
+	// Abatimentos
+
+	abatimentos := makeSubchapter(titulo, "Abatimentos", normalFont)
+
+	abatimentos_table := makeTable(c, []string{"Data", "Descrição", "Quantidade", "Valor"}, normalFont)
+
+	for _, er := range r.Abatimentos.Registros {
+		date := er.Dia + "/" + r.Mes + "/" + r.Ano
+		drawCell(c, abatimentos_table, date, normalFont, creator.CellHorizontalAlignmentCenter)
+		drawCell(c, abatimentos_table, er.Descricao, normalFont, creator.CellHorizontalAlignmentCenter)
+		drawCell(c, abatimentos_table, fmt.Sprintf("%d", er.Quantidade), normalFont, creator.CellHorizontalAlignmentCenter)
+		drawCell(c, abatimentos_table, fmt.Sprintf("%.2f", er.Valor), normalFont, creator.CellHorizontalAlignmentCenter)
+	}
+
+	drawTotalRow(c, abatimentos_table, r.Abatimentos.Total, boldFont, 3)
+
+	abatimentos.Add(abatimentos_table)
+
 	// Valores finais
 
 	valores_finais := makeSubchapter(titulo, "Valores Finais", normalFont)
