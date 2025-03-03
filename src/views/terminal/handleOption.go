@@ -17,6 +17,8 @@ func HandleOption(option string, modifiers map[string]string, arguments []string
 		op.Remove()
 	case "promote":
 		op.Promote()
+	case "update":
+		op.Update()
 	case "$":
 		SetVariable(op.Arguments)
 	case "variables":

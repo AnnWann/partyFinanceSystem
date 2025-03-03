@@ -8,7 +8,7 @@ import (
 
 func (op *Options) Promote() {
 	if len(op.Arguments) < 2 {
-		fmt.Println("Promover quem para o que? Use 'promote <id> + <função>'")
+		fmt.Println("Promover quem para o que? Use 'promote <id> + <cargo>'")
 		return
 	}
 
