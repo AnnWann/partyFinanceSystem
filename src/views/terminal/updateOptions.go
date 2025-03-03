@@ -7,13 +7,19 @@ import (
 )
 
 func (op *Options) Update() {
-	if len(op.Arguments) == 0 {
-		fmt.Println("Atualizar o que? Use:\n'update --pessoa: " + op.AddModifiers["--pessoa"] + "'\n" + "'update --tipoDeRegistro: " + op.AddModifiers["--tipoDeRegistro"] + "'\n" + "'update --diaDePagamento: " + op.AddModifiers["--diaDePagamento"] + "'")
+	if len(op.Modifiers) == 0 {
+		fmt.Println("Atualizar o que? Use:\n'update --membro: " + op.UpdateModifiers["--membro"] + "'\n" + "'update --tipoDeRegistro: " + op.UpdateModifiers["--tipoDeRegistro"] + "'\n" + "'update --diaDePagamento: " + op.UpdateModifiers["--diaDePagamento"] + "'")
 		return
 	}
 
-	switch op.Arguments[0] {
-	case "--pessoa":
+	var firstModifier string
+	for key := range op.Modifiers {
+		firstModifier = key
+		break
+	}
+
+	switch firstModifier {
+	case "--membro":
 		op.UpdatePerson()
 	case "--tipoDeRegistro":
 		op.UpdateTypeOfRegister(op.Arguments[1:])
@@ -26,13 +32,13 @@ func (op *Options) Update() {
 
 func (op *Options) UpdatePerson() {
 	if len(op.Modifiers) == 0 {
-		fmt.Println("Atualizar o que de uma pessoa? Use os modificadores --id, --nucleo, --payment")
+		fmt.Println("Atualizar o que de uma pessoa? Use os modificadores --id, --nucleo, --contribuicao")
 		return
 	}
 
 	id := op.Modifiers["--id"]
 	nucleo := op.Modifiers["--nucleo"]
-	payment := op.Modifiers["--payment"]
+	payment := op.Modifiers["--contribuicao"]
 
 	err := executors.UpdateMembro(id, nucleo, payment)
 	if err != nil {
@@ -44,7 +50,7 @@ func (op *Options) UpdatePerson() {
 
 func (op *Options) UpdateTypeOfRegister(args []string) {
 	if len(args) < 2 {
-		fmt.Println("Atualizar o que de um tipo de registro? Use os modificadores --id, --name, --description")
+		fmt.Println("Atualizar o que de um tipo de registro? Use os modificadores --id, --nome, --descricao")
 		return
 	}
 

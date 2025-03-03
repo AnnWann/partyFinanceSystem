@@ -31,7 +31,7 @@ var getModifiers = map[string]string{
 var updateModifiers = map[string]string{
 	"--diaDePagamento": "Atualizar o dia de pagamento de um nucleo. Args: Id Nucleo, Dia",
 	"--tipoDeregistro": "Atualizar o tipo de registro. Args: Id, PartilhaPartidária",
-	"--pessoa":         "Atualizar o nucleo de uma pessoa. Use --id --contribuicao --nucleo"}
+	"--membro":         "Atualizar o nucleo de uma pessoa. Use --id --contribuicao --nucleo"}
 
 var removeModifiers = map[string]string{
 	"--membro":         "Remover um membro. Args: id",

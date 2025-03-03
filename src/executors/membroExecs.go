@@ -123,10 +123,19 @@ func Promote(id string, designacao string) error {
 }
 
 func UpdateMembro(id string, nucleo string, payment string) error {
+	if nucleo == "" && payment == "" {
+		return errors.New("nada para atualizar")
+	}
+
 	idInt, err := strconv.Atoi(id)
 	if err != nil {
 		return errors.New("id deve ser um número")
 	}
+
+	if !database.GetDB().GetMembroDB().MembroExists(idInt) {
+		return errors.New("membro não existe")
+	}
+
 	db := database.GetDB().GetMembroDB()
 	if nucleo != "" {
 		nucleoInt, err := strconv.Atoi(nucleo)
