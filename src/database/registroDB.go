@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"strconv"
 
 	"github.com/AnnWann/pstu_finance_system/src/models"
 )
@@ -58,6 +59,53 @@ func (db *RegisterDB) GetRegisterById(id int) (models.Registro, error) {
 	}
 
 	return r, nil
+}
+
+func (db *RegisterDB) GetRegisterByMonthAndYearAndNucleo(mes string, ano string, nucleo int) ([]models.Registro, error) {
+
+	nucleoOBJ, err := GetDB().GetNucleoDB().GetNucleoById(nucleo)
+	if err != nil {
+		return nil, err
+	}
+
+	diaDePagamento := nucleoOBJ.Dia_de_Pagamento
+	mesInt, err := strconv.Atoi(mes)
+	if err != nil {
+		return nil, err
+	}
+
+	var rows *sql.Rows
+	if mesInt > 1 {
+		mesAnterior := mesInt - 1
+		rows, err = db.Query("SELECT * FROM registros WHERE mes = ? AND ano = ? AND nucleo = ? AND dia > ? OR mes = ? AND ano = ? AND nucleo = ? AND dia <= ?", mesAnterior, ano, nucleo, diaDePagamento, mes, ano, nucleo, diaDePagamento)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		anoInt, err := strconv.Atoi(ano)
+		if err != nil {
+			return nil, err
+		}
+		anoAnterior := anoInt - 1
+		mesAnterior := 12
+		rows, err = db.Query("SELECT * FROM registros WHERE mes = ? AND ano = ? AND nucleo = ? AND dia > ? OR mes = ? AND ano = ? AND nucleo = ? AND dia <= ?", mesAnterior, anoAnterior, nucleo, diaDePagamento, mes, ano, nucleo, diaDePagamento)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	defer rows.Close()
+
+	var registers []models.Registro
+	for rows.Next() {
+		var r models.Registro
+		err := rows.Scan(&r.ID, &r.Dia, &r.Mes, &r.Ano, &r.Tipo, &r.Nucleo, &r.Pagante, &r.Cobrante, &r.Quantidade, &r.Valor, &r.Descricao)
+		if err != nil {
+			return nil, err
+		}
+		registers = append(registers, r)
+	}
+	return registers, nil
 }
 
 func (db *RegisterDB) GetRegisterByMonthAndYear(mes string, ano string) ([]models.Registro, error) {

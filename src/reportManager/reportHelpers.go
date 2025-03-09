@@ -6,24 +6,25 @@ type RegistrosPorTipo map[int]models.SubRelatorio
 
 func getRegistrosPorTipo(registers []models.Registro, types []models.Tipo_de_registro) RegistrosPorTipo {
 	registersByType := make(RegistrosPorTipo)
+
+	typesMap := make(map[int]models.Tipo_de_registro)
 	for _, t := range types {
-		registersByType[t.ID] = models.SubRelatorio{Registros: []models.Registro{}, Tipo: t.Nome, Total: 0}
-		var remainingRegisters []models.Registro
-		for _, r := range registers {
-			if r.Tipo == t.ID {
-				registersByType[t.ID] = models.SubRelatorio{
-					Registros: append(registersByType[t.ID].Registros, r),
-					Tipo:      t.Nome,
-					Total:     registersByType[t.ID].Total + r.Valor*float64(r.Quantidade),
-				}
-				continue
-			}
-			remainingRegisters = append(remainingRegisters, r)
+		typesMap[t.ID] = t
+	}
+
+	for _, r := range registers {
+		if _, ok := registersByType[r.Tipo]; !ok {
+			registersByType[r.Tipo] = models.SubRelatorio{Registros: []models.Registro{}, Tipo: typesMap[r.Tipo].Nome, Total: 0}
 		}
-		registers = remainingRegisters
+		registersByType[r.Tipo] = models.SubRelatorio{
+			Registros: append(registersByType[r.Tipo].Registros, r),
+			Tipo:      typesMap[r.Tipo].Nome,
+			Total:     registersByType[r.Tipo].Total + r.Valor*float64(r.Quantidade),
+		}
 	}
 	return registersByType
 }
+
 func applyMemberPayments(membersReport *models.SubRelatorio, members []models.Membro) map[int]models.Membro {
 	membersAfterPaying := members
 	totalPayments := float64(0)
@@ -63,7 +64,7 @@ func extractRegistrosEspecificosDeNucleo(r RegistrosPorTipo) models.Registros_Es
 	especificos.Tipos = make(map[int]models.SubRelatorio)
 	for t, s := range r {
 		if t < 0 { //pula os tipos de registro gerais
-			break
+			continue
 		}
 		especificos.Tipos[t] = s
 		especificos.Total += s.Total

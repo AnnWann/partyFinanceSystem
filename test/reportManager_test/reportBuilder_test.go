@@ -22,7 +22,7 @@ func TestBuildRelatorioMensal(t *testing.T) {
 		"insert into pessoas (id, classe) values (9, 'Membro')",
 		"insert into pessoas (id, classe) values (10, 'Membro')",
 		"insert into pessoas (id, classe) values (11, 'Membro')",
-		"insert into nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) values (3, 'Nucleo 1', 'Cidade 1', 'Estado 1', 0, '01')",
+		"insert into nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento, administrador) values (3, 'Nucleo 1', 'Cidade 1', 'Estado 1', 0, '01', 1)",
 		"insert into membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) values (4, 'Membro 1', 3, -300, 10, 0)",
 		"insert into membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) values (5, 'Membro 2', 3, -400, 10, 0)",
 		"insert into membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) values (6, 'Membro 3', 3, -200, 10, 0)",
@@ -47,6 +47,10 @@ func TestBuildRelatorioMensal(t *testing.T) {
 		"insert into registros (id, dia, mes, ano, tipo, nucleo, pagante, cobrante, quantidade, valor, descricao) values (12, '01', '01', '2020', -400, 3, 5, 0, 1, 10, 'Descricao 12')",
 		"insert into registros (id, dia, mes, ano, tipo, nucleo, pagante, cobrante, quantidade, valor, descricao) values (13, '01', '01', '2020', -400, 3, 6, 0, 1, 10, 'Descricao 13')",
 		"insert into registros (id, dia, mes, ano, tipo, nucleo, pagante, cobrante, quantidade, valor, descricao) values (14, '01', '01', '2020', 1, 3, 7, 3, 1, 10, 'Descricao 14')",
+		"insert into registros (id, dia, mes, ano, tipo, nucleo, pagante, cobrante, quantidade, valor, descricao) values (15, '01', '01', '2020', 1, 3, 7, 3, 1, 10, 'Descricao 15')",
+		"insert into registros (id, dia, mes, ano, tipo, nucleo, pagante, cobrante, quantidade, valor, descricao) values (16, '01', '01', '2020', 1, 3, 7, 3, 1, 10, 'Descricao 16')",
+		"insert into registros (id, dia, mes, ano, tipo, nucleo, pagante, cobrante, quantidade, valor, descricao) values (17, '01', '01', '2020', 2, 3, 7, 3, 1, 10, 'Descricao 17')",
+		"insert into registros (id, dia, mes, ano, tipo, nucleo, pagante, cobrante, quantidade, valor, descricao) values (18, '01', '01', '2020', 2, 3, 7, 3, 1, 10, 'Descricao 18')",
 	}
 
 	db := test_helpers.BuildEnviroment(t, file, sqlCommands)
@@ -54,428 +58,160 @@ func TestBuildRelatorioMensal(t *testing.T) {
 	defer db.Close()
 	defer os.RemoveAll("reportManager1")
 
-	expected := models.Relatorio_mensal_complexo{
-		ID:  "Nucleo 1-01/2020",
-		Mes: "01",
-		Ano: "2020",
-		Membros: map[int]models.Membro{
-			4: {
-				ID:                  4,
-				Nome:                "Membro 1",
-				Nucleo:              3,
-				Cargo:               -300,
-				Contribuicao_mensal: 10,
-				Credito:             0,
-			},
-			5: {
-				ID:                  5,
-				Nome:                "Membro 2",
-				Nucleo:              3,
-				Cargo:               -400,
-				Contribuicao_mensal: 10,
-				Credito:             0,
-			},
-			6: {
-				ID:                  6,
-				Nome:                "Membro 3",
-				Nucleo:              3,
-				Cargo:               -200,
-				Contribuicao_mensal: 10,
-				Credito:             0,
-			},
-			7: {
-				ID:                  7,
-				Nome:                "Membro 4",
-				Nucleo:              3,
-				Cargo:               -200,
-				Contribuicao_mensal: 10,
-				Credito:             0,
-			},
-			8: {
-				ID:                  8,
-				Nome:                "Membro 5",
-				Nucleo:              3,
-				Cargo:               -200,
-				Contribuicao_mensal: 10,
-				Credito:             0,
-			},
-			9: {
-				ID:                  9,
-				Nome:                "Membro 6",
-				Nucleo:              3,
-				Cargo:               -200,
-				Contribuicao_mensal: 10,
-				Credito:             0,
-			},
-			10: {
-				ID:                  10,
-				Nome:                "Membro 7",
-				Nucleo:              3,
-				Cargo:               -100,
-				Contribuicao_mensal: 10,
-				Credito:             5,
-			},
-			11: {
-				ID:                  11,
-				Nome:                "Membro 8",
-				Nucleo:              3,
-				Cargo:               -100,
-				Contribuicao_mensal: 10,
-				Credito:             10,
-			},
+	expectedId := "3-01/2020"
+	expectedMembros := map[int]models.Membro{
+		4: {
+			ID:                  4,
+			Nome:                "Membro 1",
+			Nucleo:              3,
+			Cargo:               -300,
+			Contribuicao_mensal: 10,
+			Credito:             0,
 		},
-		Membros_apos_pagamentos: map[int]models.Membro{
-			4: {
-				ID:                  4,
-				Nome:                "Membro 1",
-				Nucleo:              3,
-				Cargo:               -300,
-				Contribuicao_mensal: 10,
-				Credito:             0,
-			},
-			5: {
-				ID:                  5,
-				Nome:                "Membro 2",
-				Nucleo:              3,
-				Cargo:               -400,
-				Contribuicao_mensal: 10,
-				Credito:             0,
-			},
-			6: {
-				ID:                  6,
-				Nome:                "Membro 3",
-				Nucleo:              3,
-				Cargo:               -200,
-				Contribuicao_mensal: 10,
-				Credito:             0,
-			},
-			7: {
-				ID:                  7,
-				Nome:                "Membro 4",
-				Nucleo:              3,
-				Cargo:               -200,
-				Contribuicao_mensal: 10,
-				Credito:             0,
-			},
-			8: {
-				ID:                  8,
-				Nome:                "Membro 5",
-				Nucleo:              3,
-				Cargo:               -200,
-				Contribuicao_mensal: 10,
-				Credito:             0,
-			},
-			9: {
-				ID:                  9,
-				Nome:                "Membro 6",
-				Nucleo:              3,
-				Cargo:               -200,
-				Contribuicao_mensal: 10,
-				Credito:             0,
-			},
-			10: {
-				ID:                  10,
-				Nome:                "Membro 7",
-				Nucleo:              3,
-				Cargo:               -100,
-				Contribuicao_mensal: 10,
-				Credito:             0,
-			},
-			11: {
-				ID:                  11,
-				Nome:                "Membro 8",
-				Nucleo:              3,
-				Cargo:               -100,
-				Contribuicao_mensal: 10,
-				Credito:             0,
-			},
+		5: {
+			ID:                  5,
+			Nome:                "Membro 2",
+			Nucleo:              3,
+			Cargo:               -400,
+			Contribuicao_mensal: 10,
+			Credito:             0,
 		},
-		Nucleo: models.Nucleo{
-			ID:               1,
-			Nome:             "Nucleo 1",
-			Cidade:           "Cidade 1",
-			Estado:           "Estado 1",
-			Reserva:          0,
-			Dia_de_Pagamento: "01",
+		6: {
+			ID:                  6,
+			Nome:                "Membro 3",
+			Nucleo:              3,
+			Cargo:               -200,
+			Contribuicao_mensal: 10,
+			Credito:             0,
 		},
-		Partido: models.Partido{
-			ID:      1,
-			Nome:    "Partido Teste",
-			Reserva: 0,
+		7: {
+			ID:                  7,
+			Nome:                "Membro 4",
+			Nucleo:              3,
+			Cargo:               -200,
+			Contribuicao_mensal: 10,
+			Credito:             0,
 		},
-		Pagamentos_de_membros: models.SubRelatorio{
-			Registros: []models.Registro{
-				{
-					ID:         1,
-					Dia:        "01",
-					Mes:        "01",
-					Ano:        "2020",
-					Tipo:       -100,
-					Nucleo:     3,
-					Pagante:    4,
-					Cobrante:   3,
-					Quantidade: 1,
-					Valor:      10,
-					Descricao:  "Descricao 1",
-				},
-				{
-					ID:         2,
-					Dia:        "01",
-					Mes:        "01",
-					Ano:        "2020",
-					Tipo:       -100,
-					Nucleo:     3,
-					Pagante:    5,
-					Cobrante:   3,
-					Quantidade: 1,
-					Valor:      10,
-					Descricao:  "Descricao 2",
-				},
-				{
-					ID:         3,
-					Dia:        "01",
-					Mes:        "01",
-					Ano:        "2020",
-					Tipo:       -100,
-					Nucleo:     3,
-					Pagante:    6,
-					Cobrante:   3,
-					Quantidade: 1,
-					Valor:      10,
-					Descricao:  "Descricao 3",
-				},
-				{
-					ID:         4,
-					Dia:        "01",
-					Mes:        "01",
-					Ano:        "2020",
-					Tipo:       -100,
-					Nucleo:     3,
-					Pagante:    7,
-					Cobrante:   3,
-					Quantidade: 1,
-					Valor:      10,
-					Descricao:  "Descricao 4",
-				},
-				{
-					ID:         5,
-					Dia:        "01",
-					Mes:        "01",
-					Ano:        "2020",
-					Tipo:       -100,
-					Nucleo:     3,
-					Pagante:    8,
-					Cobrante:   3,
-					Quantidade: 1,
-					Valor:      10,
-					Descricao:  "Descricao 5",
-				},
-				{
-					ID:         6,
-					Dia:        "01",
-					Mes:        "01",
-					Ano:        "2020",
-					Tipo:       -100,
-					Nucleo:     3,
-					Pagante:    9,
-					Cobrante:   3,
-					Quantidade: 1,
-					Valor:      10,
-					Descricao:  "Descricao 6",
-				},
-				{
-					ID:         7,
-					Dia:        "01",
-					Mes:        "01",
-					Ano:        "2020",
-					Tipo:       -100,
-					Nucleo:     3,
-					Pagante:    10,
-					Cobrante:   3,
-					Quantidade: 1,
-					Valor:      5,
-					Descricao:  "Descricao 7",
-				},
-			},
-			Total: 65,
+		8: {
+			ID:                  8,
+			Nome:                "Membro 5",
+			Nucleo:              3,
+			Cargo:               -200,
+			Contribuicao_mensal: 10,
+			Credito:             0,
 		},
-		Vendas_jornal: models.SubRelatorio{
-			Registros: []models.Registro{
-				{
-					ID:         8,
-					Dia:        "01",
-					Mes:        "01",
-					Ano:        "2020",
-					Tipo:       -200,
-					Nucleo:     3,
-					Pagante:    0,
-					Cobrante:   4,
-					Quantidade: 1,
-					Valor:      4,
-					Descricao:  "Descricao 8",
-				},
-				{
-					ID:         9,
-					Dia:        "01",
-					Mes:        "01",
-					Ano:        "2020",
-					Tipo:       -200,
-					Nucleo:     3,
-					Pagante:    0,
-					Cobrante:   5,
-					Quantidade: 1,
-					Valor:      4,
-					Descricao:  "Descricao 9",
-				},
-				{
-					ID:         10,
-					Dia:        "01",
-					Mes:        "01",
-					Ano:        "2020",
-					Tipo:       -200,
-					Nucleo:     3,
-					Pagante:    0,
-					Cobrante:   6,
-					Quantidade: 1,
-					Valor:      4,
-					Descricao:  "Descricao 10",
-				},
-			},
-			Total: 16, // set the correct total value
+		9: {
+			ID:                  9,
+			Nome:                "Membro 6",
+			Nucleo:              3,
+			Cargo:               -200,
+			Contribuicao_mensal: 10,
+			Credito:             0,
 		},
-		Gastos: models.SubRelatorio{
-			Registros: []models.Registro{
-				{
-					ID:         11,
-					Dia:        "01",
-					Mes:        "01",
-					Ano:        "2020",
-					Tipo:       -400,
-					Nucleo:     3,
-					Pagante:    4,
-					Cobrante:   0,
-					Quantidade: 1,
-					Valor:      10,
-					Descricao:  "Descricao 11",
-				},
-				{
-					ID:         12,
-					Dia:        "01",
-					Mes:        "01",
-					Ano:        "2020",
-					Tipo:       -400,
-					Nucleo:     3,
-					Pagante:    5,
-					Cobrante:   0,
-					Quantidade: 1,
-					Valor:      10,
-					Descricao:  "Descricao 12",
-				},
-				{
-					ID:         13,
-					Dia:        "01",
-					Mes:        "01",
-					Ano:        "2020",
-					Tipo:       -400,
-					Nucleo:     3,
-					Pagante:    6,
-					Cobrante:   0,
-					Quantidade: 1,
-					Valor:      10,
-					Descricao:  "Descricao 13",
-				},
-			},
-			Total: 30,
+		10: {
+			ID:                  10,
+			Nome:                "Membro 7",
+			Nucleo:              3,
+			Cargo:               -100,
+			Contribuicao_mensal: 10,
+			Credito:             5,
 		},
-		Registros_especificos: models.Registros_Especificos_Nucleo{
-			Tipos: map[int]models.SubRelatorio{
-				1: {
-					Registros: []models.Registro{
-						{
-							ID:         1,
-							Dia:        "01",
-							Mes:        "01",
-							Ano:        "2020",
-							Tipo:       1,
-							Nucleo:     3,
-							Pagante:    0,
-							Cobrante:   4,
-							Quantidade: 1,
-							Valor:      10,
-							Descricao:  "Descricao 1",
-						},
-						{
-							ID:         2,
-							Dia:        "01",
-							Mes:        "01",
-							Ano:        "2020",
-							Tipo:       1,
-							Nucleo:     3,
-							Pagante:    0,
-							Cobrante:   4,
-							Quantidade: 1,
-							Valor:      10,
-							Descricao:  "Descricao 2",
-						},
-						{
-							ID:         3,
-							Dia:        "01",
-							Mes:        "01",
-							Ano:        "2020",
-							Tipo:       1,
-							Nucleo:     3,
-							Pagante:    0,
-							Cobrante:   3,
-							Quantidade: 1,
-							Valor:      10,
-							Descricao:  "Descricao 3",
-						},
-					},
-					Total: 30, // set the correct total value
-				},
-				2: {
-					Registros: []models.Registro{
-						{
-							ID:         8,
-							Dia:        "01",
-							Mes:        "01",
-							Ano:        "2020",
-							Tipo:       2,
-							Nucleo:     3,
-							Pagante:    0,
-							Cobrante:   4,
-							Quantidade: 1,
-							Valor:      4,
-							Descricao:  "Descricao 8",
-						},
-						{
-							ID:         9,
-							Dia:        "01",
-							Mes:        "01",
-							Ano:        "2020",
-							Tipo:       2,
-							Nucleo:     3,
-							Pagante:    0,
-							Cobrante:   5,
-							Quantidade: 1,
-							Valor:      4,
-							Descricao:  "Descricao 9",
-						},
-					},
-					Total: 8,
-				},
-			},
-			Total: 38,
+		11: {
+			ID:                  11,
+			Nome:                "Membro 8",
+			Nucleo:              3,
+			Cargo:               -100,
+			Contribuicao_mensal: 10,
+			Credito:             10,
 		},
-		Total_Ganho:          119,
-		Total_Liquido:        89,
-		Pagamento_Partidario: 76,
-		Lucro_Nucleo:         13,
-		Link_Arquivo:         "",
 	}
+	expectedMembros_apos_pagamentos := map[int]models.Membro{
+		4: {
+			ID:                  4,
+			Nome:                "Membro 1",
+			Nucleo:              3,
+			Cargo:               -300,
+			Contribuicao_mensal: 10,
+			Credito:             0,
+		},
+		5: {
+			ID:                  5,
+			Nome:                "Membro 2",
+			Nucleo:              3,
+			Cargo:               -400,
+			Contribuicao_mensal: 10,
+			Credito:             0,
+		},
+		6: {
+			ID:                  6,
+			Nome:                "Membro 3",
+			Nucleo:              3,
+			Cargo:               -200,
+			Contribuicao_mensal: 10,
+			Credito:             0,
+		},
+		7: {
+			ID:                  7,
+			Nome:                "Membro 4",
+			Nucleo:              3,
+			Cargo:               -200,
+			Contribuicao_mensal: 10,
+			Credito:             0,
+		},
+		8: {
+			ID:                  8,
+			Nome:                "Membro 5",
+			Nucleo:              3,
+			Cargo:               -200,
+			Contribuicao_mensal: 10,
+			Credito:             0,
+		},
+		9: {
+			ID:                  9,
+			Nome:                "Membro 6",
+			Nucleo:              3,
+			Cargo:               -200,
+			Contribuicao_mensal: 10,
+			Credito:             0,
+		},
+		10: {
+			ID:                  10,
+			Nome:                "Membro 7",
+			Nucleo:              3,
+			Cargo:               -100,
+			Contribuicao_mensal: 10,
+			Credito:             0,
+		},
+		11: {
+			ID:                  11,
+			Nome:                "Membro 8",
+			Nucleo:              3,
+			Cargo:               -100,
+			Contribuicao_mensal: 10,
+			Credito:             0,
+		},
+	}
+	expectedNucleo := models.Nucleo{
+		ID:               3,
+		Nome:             "Nucleo 1",
+		Cidade:           "Cidade 1",
+		Estado:           "Estado 1",
+		Reserva:          0,
+		Dia_de_Pagamento: "01",
+		Administrador:    1,
+	}
+	expectedTotalMembros := 80
+	expectedTotalJornal := 12
+	expectedTotalGastos := 30
+	expectedTotalRegistrosEspecificos1 := 30
+	expectedTotalRegistrosEspecificos2 := 20
+	ExpectedTotal_Ganho := expectedTotalMembros + expectedTotalJornal + expectedTotalRegistrosEspecificos1 + expectedTotalRegistrosEspecificos2
+	ExpectedTotal_Liquido := ExpectedTotal_Ganho - expectedTotalGastos
+	ExpectedPagamento_Partidario := expectedTotalMembros + 2*3 + 3 + 2
+	ExpectedLucro_Nucleo := ExpectedTotal_Liquido - ExpectedPagamento_Partidario
 
 	expected_Pagamento_partido := models.Registro{
-		ID:         14,
+		ID:         19,
 		Dia:        "01",
 		Mes:        "01",
 		Ano:        "2020",
@@ -484,7 +220,8 @@ func TestBuildRelatorioMensal(t *testing.T) {
 		Pagante:    3,
 		Cobrante:   1,
 		Quantidade: 1,
-		Valor:      76,
+		Valor:      float64(ExpectedPagamento_Partidario),
+		Descricao:  "Pagamento ao administrador",
 	}
 
 	result, pagamento_partido, err := reportManager.BuildRelatorioMensal("01", "2020", 3)
@@ -492,11 +229,59 @@ func TestBuildRelatorioMensal(t *testing.T) {
 		t.Fatalf("Error: %v", err)
 	}
 
-	if !reflect.DeepEqual(expected_Pagamento_partido, pagamento_partido) {
-		t.Errorf("Expected: %v\nGot: %v", expected_Pagamento_partido, pagamento_partido)
+	if !reflect.DeepEqual(expectedId, result.ID) {
+		t.Errorf("Para ID -> Expected: %v\nGot: %v", expectedId, result.ID)
 	}
 
-	if !reflect.DeepEqual(expected, result) {
-		t.Errorf("Expected: %v\nGot: %v", expected, result)
+	if !reflect.DeepEqual(expectedMembros, result.Membros) {
+		t.Errorf("Para Membros -> Expected: %v\nGot: %v", expectedMembros, result.Membros)
+	}
+
+	if !reflect.DeepEqual(expectedMembros_apos_pagamentos, result.Membros_apos_pagamentos) {
+		t.Errorf("Para Membros Após Pagamento -> Expected: %v\nGot: %v", expectedMembros_apos_pagamentos, result.Membros_apos_pagamentos)
+	}
+
+	if !reflect.DeepEqual(expectedNucleo, result.Nucleo) {
+		t.Errorf("Para Nucleo -> Expected: %v\nGot: %v", expectedNucleo, result.Nucleo)
+	}
+
+	if expectedTotalMembros != int(result.Pagamentos_de_membros.Total) {
+		t.Errorf("Para Total Membros -> Expected: %v\nGot: %v", expectedTotalMembros, result.Pagamentos_de_membros.Total)
+	}
+
+	if expectedTotalJornal != int(result.Vendas_jornal.Total) {
+		t.Errorf("Para Total Jornal -> Expected: %v\nGot: %v", expectedTotalJornal, result.Vendas_jornal.Total)
+	}
+
+	if expectedTotalGastos != int(result.Gastos.Total) {
+		t.Errorf("Para Total Gastos -> Expected: %v\nGot: %v", expectedTotalGastos, result.Gastos.Total)
+	}
+
+	if expectedTotalRegistrosEspecificos1 != int(result.Registros_especificos.Tipos[1].Total) {
+		t.Errorf("Para Total Registros Especificos 1 -> Expected: %v\nGot: %v", expectedTotalRegistrosEspecificos1, result.Registros_especificos.Tipos[1].Total)
+	}
+
+	if expectedTotalRegistrosEspecificos2 != int(result.Registros_especificos.Tipos[2].Total) {
+		t.Errorf("Para Total Registros Especificos 2 -> Expected: %v\nGot: %v", expectedTotalRegistrosEspecificos2, result.Registros_especificos.Tipos[2].Total)
+	}
+
+	if ExpectedTotal_Ganho != int(result.Total_Ganho) {
+		t.Errorf("Para Total Ganho -> Expected: %v\nGot: %v", ExpectedTotal_Ganho, result.Total_Ganho)
+	}
+
+	if ExpectedTotal_Liquido != int(result.Total_Liquido) {
+		t.Errorf("Para Total Liquido -> Expected: %v\nGot: %v", ExpectedTotal_Liquido, result.Total_Liquido)
+	}
+
+	if ExpectedPagamento_Partidario != int(result.Pagamento_Partidario) {
+		t.Errorf("Para Pagamento Partidario -> Expected: %v\nGot: %v", ExpectedPagamento_Partidario, result.Pagamento_Partidario)
+	}
+
+	if ExpectedLucro_Nucleo != int(result.Lucro_Nucleo) {
+		t.Errorf("Para Lucro Nucleo -> Expected: %v\nGot: %v", ExpectedLucro_Nucleo, result.Lucro_Nucleo)
+	}
+
+	if !reflect.DeepEqual(expected_Pagamento_partido, pagamento_partido) {
+		t.Errorf("PagamentoPartido -> Expected: %v\nGot: %v", expected_Pagamento_partido, pagamento_partido)
 	}
 }

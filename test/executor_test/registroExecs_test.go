@@ -12,7 +12,7 @@ import (
 func TestAddRegistroSucceding(t *testing.T) {
 	file := "register1/add/test.db"
 	sqlCommands := []string{
-		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (3, 'nucleo1', 'cidade1', 'estado1', 0, '01')",
+		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento, administrador) VALUES (3, 'nucleo1', 'cidade1', 'estado1', 0, '01', 1)",
 		"INSERT INTO tipos_de_registro (id, nome, nucleo, descricao, partilha_partidaria) VALUES (1, 'tipo1', 1, 'descricao1', 0.5)",
 		"INSERT INTO pessoas (id, classe) VALUES (3, 'nucleo')",
 		"INSERT INTO pessoas (id, classe) VALUES (4, 'membro')",

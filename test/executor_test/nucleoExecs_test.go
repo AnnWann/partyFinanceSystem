@@ -75,10 +75,10 @@ func TestAddNucleo(t *testing.T) {
 func TestGetNucleo(t *testing.T) {
 	file := "nucleo2/get/test.db"
 	sqlCommands := []string{
-		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (1, 'nucleo1', 'cidade1', 'estado1', 0, '01');",
-		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (2, 'nucleo2', 'cidade2', 'estado2', 0, '02');",
-		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (3, 'nucleo3', 'cidade3', 'estado3', 0, '03');",
-		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (4, 'nucleo4', 'cidade2', 'estado2', 0, '04');",
+		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento, administrador) VALUES (1, 'nucleo1', 'cidade1', 'estado1', 0, '01', 1);",
+		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento, administrador) VALUES (2, 'nucleo2', 'cidade2', 'estado2', 0, '02', 1);",
+		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento, administrador) VALUES (3, 'nucleo3', 'cidade3', 'estado3', 0, '03', 1);",
+		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento, administrador) VALUES (4, 'nucleo4', 'cidade2', 'estado2', 0, '04', 1);",
 	}
 
 	db := test_helpers.BuildEnviroment(t, file, sqlCommands)
@@ -93,6 +93,7 @@ func TestGetNucleo(t *testing.T) {
 			Estado:           "estado1",
 			Reserva:          0,
 			Dia_de_Pagamento: "01",
+			Administrador:    1,
 		},
 		{
 			ID:               2,
@@ -101,6 +102,7 @@ func TestGetNucleo(t *testing.T) {
 			Estado:           "estado2",
 			Reserva:          0,
 			Dia_de_Pagamento: "02",
+			Administrador:    1,
 		},
 		{
 			ID:               3,
@@ -109,6 +111,7 @@ func TestGetNucleo(t *testing.T) {
 			Estado:           "estado3",
 			Reserva:          0,
 			Dia_de_Pagamento: "03",
+			Administrador:    1,
 		},
 		{
 			ID:               4,
@@ -117,6 +120,7 @@ func TestGetNucleo(t *testing.T) {
 			Estado:           "estado2",
 			Reserva:          0,
 			Dia_de_Pagamento: "04",
+			Administrador:    1,
 		},
 	}
 
@@ -152,6 +156,7 @@ func TestGetNucleo(t *testing.T) {
 			Estado:           "estado2",
 			Reserva:          0,
 			Dia_de_Pagamento: "02",
+			Administrador:    1,
 		},
 
 		{
@@ -161,6 +166,7 @@ func TestGetNucleo(t *testing.T) {
 			Estado:           "estado2",
 			Reserva:          0,
 			Dia_de_Pagamento: "04",
+			Administrador:    1,
 		},
 	}
 
@@ -174,7 +180,7 @@ func TestGetNucleo(t *testing.T) {
 func TestDeleteNucleo(t *testing.T) {
 	file := "nucleo3/delete/test.db"
 	sqlCommands := []string{
-		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (1, 'nucleo1', 'cidade1', 'estado1', 0, '01');",
+		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento, administrador) VALUES (1, 'nucleo1', 'cidade1', 'estado1', 0, '01', 1);",
 		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES (1, 'pessoa1', 1, 1, 100, 0);",
 		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES (2, 'pessoa2', 1, 1, 200, 0);",
 		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES (3, 'pessoa3', 1, 1, 300, 0);",
@@ -226,7 +232,7 @@ func TestDeleteNucleo(t *testing.T) {
 func TestUpdatePayday(t *testing.T) {
 	file := "nucleo4/update/test.db"
 	sqlCommands := []string{
-		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (1, 'nucleo1', 'cidade1', 'estado1', 0, '01');",
+		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento, administrador) VALUES (1, 'nucleo1', 'cidade1', 'estado1', 0, '01', 1);",
 	}
 
 	db := test_helpers.BuildEnviroment(t, file, sqlCommands)

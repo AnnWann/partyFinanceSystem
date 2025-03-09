@@ -14,9 +14,9 @@ import (
 func TestAddMembroSucceding(t *testing.T) {
 	file := "person1/add/succeding/test.db"
 	sqlCommands := []string{
-		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (1, 'nucleo1', 'cidade1', 'estado1', 0, '01')",
-		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (2, 'nucleo2', 'cidade2', 'estado2', 0, '02')",
-		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (3, 'nucleo3', 'cidade3', 'estado3', 0, '03')"}
+		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento, administrador) VALUES (1, 'nucleo1', 'cidade1', 'estado1', 0, '01', 1)",
+		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento, administrador) VALUES (2, 'nucleo2', 'cidade2', 'estado2', 0, '02', 1)",
+		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento, administrador) VALUES (3, 'nucleo3', 'cidade3', 'estado3', 0, '03', 1)"}
 
 	db := test_helpers.BuildEnviroment(t, file, sqlCommands)
 
@@ -69,9 +69,9 @@ func TestAddMembroSucceding(t *testing.T) {
 func TestAddPersonFailing(t *testing.T) {
 	file := "person2/add/failing/test.db"
 	sqlCommands := []string{
-		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (1, 'nucleo1', 'cidade1', 'estado1', 0, '01')",
-		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (2, 'nucleo2', 'cidade2', 'estado2', 0, '02')",
-		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (3, 'nucleo3', 'cidade3', 'estado3', 0, '03')"}
+		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento, administrador) VALUES (1, 'nucleo1', 'cidade1', 'estado1', 0, '01', 1)",
+		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento, administrador) VALUES (2, 'nucleo2', 'cidade2', 'estado2', 0, '02', 1)",
+		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento, administrador) VALUES (3, 'nucleo3', 'cidade3', 'estado3', 0, '03', 1)"}
 
 	db := test_helpers.BuildEnviroment(t, file, sqlCommands)
 
@@ -100,9 +100,9 @@ func TestAddPersonFailing(t *testing.T) {
 func TestGetMembro(t *testing.T) {
 	file := "person3/get/test.db"
 	sqlCommands := []string{
-		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (1, 'nucleo1', 'cidade1', 'estado1', 0, '01')",
-		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (2, 'nucleo2', 'cidade2', 'estado2', 0, '02')",
-		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (3, 'nucleo3', 'cidade3', 'estado3', 0, '03')",
+		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento, administrador) VALUES (1, 'nucleo1', 'cidade1', 'estado1', 0, '01', 1)",
+		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento, administrador) VALUES (2, 'nucleo2', 'cidade2', 'estado2', 0, '02', 1)",
+		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento, administrador) VALUES (3, 'nucleo3', 'cidade3', 'estado3', 0, '03', 1)",
 		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('1', 'person1', 1, -300, 0, 0)",
 		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('2', 'person2', 2, -300, 0, 0)",
 		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('3', 'person3', 3, -300, 0, 0)",
@@ -198,9 +198,9 @@ func TestGetMembro(t *testing.T) {
 func TestUpdateMembro(t *testing.T) {
 	file := "person4/update/test.db"
 	sqlCommands := []string{
-		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (1, 'nucleo1', 'cidade1', 'estado1', 0, '01')",
-		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (2, 'nucleo2', 'cidade2', 'estado2', 0, '02')",
-		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (3, 'nucleo3', 'cidade3', 'estado3', 0, '03')",
+		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento, administrador) VALUES (1, 'nucleo1', 'cidade1', 'estado1', 0, '01', 1)",
+		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento, administrador) VALUES (2, 'nucleo2', 'cidade2', 'estado2', 0, '02', 1)",
+		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento, administrador) VALUES (3, 'nucleo3', 'cidade3', 'estado3', 0, '03', 1)",
 		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('1', 'person1', 1, -300, 0, 0)",
 		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('2', 'person2', 2, -300, 0, 0)",
 		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('3', 'person3', 3, -300, 0, 0)",
@@ -301,7 +301,7 @@ func TestUpdateMembro(t *testing.T) {
 func TestPromoteMembro(t *testing.T) {
 	file := "person5/promote/test.db"
 	sqlCommands := []string{
-		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) VALUES (1, 'nucleo1', 'cidade1', 'estado1', 0, '01')",
+		"INSERT INTO nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento, administrador) VALUES (1, 'nucleo1', 'cidade1', 'estado1', 0, '01', 1)",
 		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('1', 'person1', 1, -300, 0, 0)",
 		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('2', 'person2', 1, -400, 0, 0)",
 		"INSERT INTO membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) VALUES ('3', 'person3', 1, -100, 0, 0)",

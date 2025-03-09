@@ -11,7 +11,7 @@ func BuildRelatorioMensal(month string, year string, nucleoId int) (models.Relat
 
 	db := database.GetDB()
 
-	registrosDoMes, err := db.GetRegisterDB().GetRegisterByMonthAndYear(month, year)
+	registrosDoMes, err := db.GetRegisterDB().GetRegisterByMonthAndYearAndNucleo(month, year, nucleoId)
 	if err != nil {
 		return models.Relatorio_mensal_complexo{}, models.Registro{}, err
 	}

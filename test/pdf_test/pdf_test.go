@@ -23,7 +23,7 @@ func TestPdf(t *testing.T) {
 		"insert into pessoas (id, classe) values (9, 'Membro')",
 		"insert into pessoas (id, classe) values (10, 'Membro')",
 		"insert into pessoas (id, classe) values (11, 'Membro')",
-		"insert into nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento) values (3, 'Nucleo 1', 'Cidade 1', 'Estado 1', 0, '01')",
+		"insert into nucleos (id, nome, cidade, estado, reserva, dia_de_pagamento, administrador) values (3, 'Nucleo 1', 'Cidade 1', 'Estado 1', 0, '01', 1)",
 		"insert into membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) values (4, 'Membro 1', 3, -300, 10, 0)",
 		"insert into membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) values (5, 'Membro 2', 3, -400, 10, 0)",
 		"insert into membros (id, nome, nucleo, cargo, contribuicao_mensal, credito) values (6, 'Membro 3', 3, -200, 10, 0)",
